@@ -31,7 +31,7 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
         public SeedData()
         {
             SeedExercises();
-            SeedCategories();
+            //SeedCategories();
             SeedTrainers();
             SeedMuscleGroups();
             SeedExerciseMuscleGroups();
@@ -86,36 +86,36 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
                   };
         }
 
-        private void SeedCategories()
-        {
-            FirstCategory =
-               new Category
-               {
-                   Id = 1,
-                   Name = "Cardio"
-               };
-            SecondCategory =
-                new Category
-                {
-                    Id = 2,
-                    Name = "Strength Training"
-                };
-            ThirdCategory =
-            new Category
-            {
-                Id = 3,
-                Name = "Flexibility and Mobility"
-            };
-            FourthCategory =
+        //private void SeedCategories()
+        //{
+        //    FirstCategory =
+        //       new Category
+        //       {
+        //           Id = 1,
+        //           Name = "Cardio"
+        //       };
+        //    SecondCategory =
+        //        new Category
+        //        {
+        //            Id = 2,
+        //            Name = "Strength Training"
+        //        };
+        //    ThirdCategory =
+        //    new Category
+        //    {
+        //        Id = 3,
+        //        Name = "Flexibility and Mobility"
+        //    };
+        //    FourthCategory =
 
-           new Category
-           {
-               Id = 4,
-               Name = "Balance and Stability"
-           };
-        }
+        //   new Category
+        //   {
+        //       Id = 4,
+        //       Name = "Balance and Stability"
+        //   };
+        //}
 
-        private void SeedTrainers()
+         private void SeedTrainers()
         {
             FirstTrainer =
             new Trainer
@@ -129,7 +129,7 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
                 Education = "Certified Personal Trainer"
             };
 
-            SecondTrainer =
+    SecondTrainer =
             new Trainer
             {
                 Id = 2,
@@ -140,17 +140,17 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
                 ImageUrl = "https://img.freepik.com/premium-photo/young-female-fitness-personal-trainer-with-notepad-standing-gym-with-thumb-up_146671-31568.jpg",
                 Education = "Bachelor's Degree in Exercise Science"
             };
-            ThirdTrainer =
-            new Trainer
-            {
-                Id = 3,
-                FullName = "John Doe",
-                Age = 27,
-                ExerciseId = 3,
-                Slogan = "Train hard, win easy",
-                ImageUrl = "https://t3.ftcdn.net/jpg/06/45/17/94/360_F_645179444_EtQDcQw5Mcyv1MSH25K5FrEkb3LfH5Vk.jpg",
-                Education = "Certified Personal Trainer"
-            };
+ThirdTrainer =
+new Trainer
+{
+    Id = 3,
+    FullName = "John Doe",
+    Age = 27,
+    ExerciseId = 3,
+    Slogan = "Train hard, win easy",
+    ImageUrl = "https://t3.ftcdn.net/jpg/06/45/17/94/360_F_645179444_EtQDcQw5Mcyv1MSH25K5FrEkb3LfH5Vk.jpg",
+    Education = "Certified Personal Trainer"
+};
         }
 
         public void SeedMuscleGroups()
