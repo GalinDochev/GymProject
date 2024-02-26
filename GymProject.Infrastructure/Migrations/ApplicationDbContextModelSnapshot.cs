@@ -39,7 +39,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkoutCategories");
+                    b.ToTable("WorkoutCategories", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Exercise", b =>
@@ -80,7 +80,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Excercises");
+                    b.ToTable("Excercises", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.ExerciseMuscleGroup", b =>
@@ -95,7 +95,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("MuscleGroupId");
 
-                    b.ToTable("ExerciseMuscleGroup");
+                    b.ToTable("ExerciseMuscleGroup", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.ExerciseWorkout", b =>
@@ -110,7 +110,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("WorkoutId");
 
-                    b.ToTable("ExerciseWorkouts");
+                    b.ToTable("ExerciseWorkouts", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.MuscleGroup", b =>
@@ -129,7 +129,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MuscleGroups");
+                    b.ToTable("MuscleGroups", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Trainer", b =>
@@ -173,7 +173,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("Trainers");
+                    b.ToTable("Trainers", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Workout", b =>
@@ -225,7 +225,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Workouts");
+                    b.ToTable("Workouts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

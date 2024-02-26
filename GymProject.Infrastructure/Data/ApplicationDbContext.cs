@@ -18,6 +18,7 @@ namespace GymProject.Infrastructure.Data
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Category> WorkoutCategories { get; set; }
         public DbSet<ExerciseWorkout> ExerciseWorkouts { get; set; }
+        public DbSet<UserWorkout> UsersWorkouts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,6 +49,16 @@ namespace GymProject.Infrastructure.Data
                 .HasOne(emg => emg.MuscleGroup)
                 .WithMany(mg => mg.ExerciseMuscleGroups)
                 .HasForeignKey(emg => emg.MuscleGroupId);
+
+
+            modelBuilder.Entity<UserWorkout>()
+                .HasKey(ep => new { ep.WorkoutId, ep.UserId });
+
+            modelBuilder.Entity<UserWorkout>()
+           .HasOne(ep => ep.Workout)
+           .WithMany(e => e.UsersWorkouts)
+           .HasForeignKey(ep => ep.WorkoutId);
+           
         }
     }
 

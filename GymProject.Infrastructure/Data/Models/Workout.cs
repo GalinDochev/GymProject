@@ -49,5 +49,6 @@ namespace GymProject.Infrastructure.Data.Models
         public Category Category { get; set; } = null!;
 
         public ICollection<ExerciseWorkout> ExerciseWorkouts { get; set; } = new List<ExerciseWorkout>();
+        public ICollection<UserWorkout> UsersWorkouts { get; set; } = new List<UserWorkout>();
     }
 }
