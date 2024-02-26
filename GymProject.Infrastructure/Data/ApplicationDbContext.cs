@@ -1,4 +1,5 @@
 ﻿using GymProject.Infrastructure.Data.Models;
+using GymProject.Infrastructure.Data.SeedDatabase;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,11 @@ namespace GymProject.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new ExerciseConfiguration());
+            modelBuilder.ApplyConfiguration(new ExerciseMuscleGroupConfiguration());
+            modelBuilder.ApplyConfiguration(new MuscleGroupConfiguration());
+            modelBuilder.ApplyConfiguration(new TrainerConfiguration());
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<ExerciseWorkout>()
            .HasKey(ew => new { ew.ExerciseId, ew.WorkoutId });
@@ -37,19 +43,6 @@ namespace GymProject.Infrastructure.Data
                 .HasForeignKey(ew => ew.WorkoutId);
 
 
-            modelBuilder.Entity<ExerciseMuscleGroup>()
-        .HasKey(emg => new { emg.ExerciseId, emg.MuscleGroupId });
-
-            modelBuilder.Entity<ExerciseMuscleGroup>()
-                .HasOne(emg => emg.Exercise)
-                .WithMany(ex => ex.ExerciseMuscleGroups)
-                .HasForeignKey(emg => emg.ExerciseId);
-
-            modelBuilder.Entity<ExerciseMuscleGroup>()
-                .HasOne(emg => emg.MuscleGroup)
-                .WithMany(mg => mg.ExerciseMuscleGroups)
-                .HasForeignKey(emg => emg.MuscleGroupId);
-
 
             modelBuilder.Entity<UserWorkout>()
                 .HasKey(ep => new { ep.WorkoutId, ep.UserId });
@@ -57,8 +50,10 @@ namespace GymProject.Infrastructure.Data
             modelBuilder.Entity<UserWorkout>()
            .HasOne(ep => ep.Workout)
            .WithMany(e => e.UsersWorkouts)
-           .HasForeignKey(ep => ep.WorkoutId);
-           
+           .HasForeignKey(ep => ep.WorkoutId)
+           .OnDelete(DeleteBehavior.Restrict);
+
+            
         }
     }
 

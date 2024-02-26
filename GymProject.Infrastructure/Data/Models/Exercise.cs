@@ -35,7 +35,6 @@ namespace GymProject.Infrastructure.Data.Models
         [Range(MinExcerciseSetsLength, MaxExcerciseSetsLength)]
         public int Sets { get; set; }
         public ICollection<ExerciseWorkout> ExerciseWorkouts { get; set; } = new List<ExerciseWorkout>();
-        public ICollection<Trainer> TrainersWithThisFavouriteExcercise { get; set; }=new List<Trainer>();
         public ICollection<ExerciseMuscleGroup> ExerciseMuscleGroups { get; set; } = new List<ExerciseMuscleGroup>();
 
     }
