@@ -15,7 +15,7 @@ namespace GymProject.Infrastructure.Constants
         public const int MaxWorkoutDescriptionLength = 200;
 
         public const int MinWorkoutCategoryNameLength = 3;
-        public const int MaxWorkoutCategoryNameLength = 20;
+        public const int MaxWorkoutCategoryNameLength = 250;
 
         public const int MinWorkoutLevelLength = 1;
         public const int MaxWorkoutLevelLength = 10;

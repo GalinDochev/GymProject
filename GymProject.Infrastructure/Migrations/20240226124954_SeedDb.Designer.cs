@@ -4,6 +4,7 @@ using GymProject.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymProject.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240226124954_SeedDb")]
+    partial class SeedDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,51 +33,15 @@ namespace GymProject.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
                         .HasComment("Category Name");
 
                     b.HasKey("Id");
 
                     b.ToTable("WorkoutCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Name = "Cardio"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Name = "Strength Training"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Name = "Flexibility and Mobility"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
-                            Name = "Balance and Stability"
-                        });
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Exercise", b =>
@@ -86,9 +52,6 @@ namespace GymProject.Infrastructure.Migrations
                         .HasComment("Excercise identifier");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -104,9 +67,6 @@ namespace GymProject.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasComment("A picture of the Excercise during motion");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -128,11 +88,9 @@ namespace GymProject.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Description of Dumbbell Biceps Curl",
                             DifficultyLevel = 6,
                             ImageUrl = "https://cdn-0.weighttraining.guide/wp-content/uploads/2016/05/Dumbbell-Alternate-Biceps-Curl-resized.png?ezimgfmt=ng%3Awebp%2Fngcb4",
-                            IsDeleted = false,
                             Name = "Dumbbell Biceps Curl",
                             Repetitions = 10,
                             Sets = 4
@@ -140,11 +98,9 @@ namespace GymProject.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Description of Barbell Biceps Curl",
                             DifficultyLevel = 7,
                             ImageUrl = "https://kinxlearning.com/cdn/shop/files/exercise-41_1400x.jpg?v=1613157966",
-                            IsDeleted = false,
                             Name = "Barbell Biceps curl",
                             Repetitions = 12,
                             Sets = 4
@@ -152,11 +108,9 @@ namespace GymProject.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Description of Triceps French Curl",
                             DifficultyLevel = 8,
                             ImageUrl = "https://www.fitstep.com/2/2-how-to-build-muscle/muscle-and-strength-questions/graphics/french-curl.gif",
-                            IsDeleted = false,
                             Name = "Triceps French Curl",
                             Repetitions = 8,
                             Sets = 4
@@ -164,11 +118,9 @@ namespace GymProject.Infrastructure.Migrations
                         new
                         {
                             Id = 4,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Description of Cable Rope Pushdown",
                             DifficultyLevel = 7,
                             ImageUrl = "https://static.strengthlevel.com/images/illustrations/tricep-rope-pushdown-1000x1000.jpg",
-                            IsDeleted = false,
                             Name = "Cable Rope Pushdown",
                             Repetitions = 12,
                             Sets = 4
@@ -183,12 +135,6 @@ namespace GymProject.Infrastructure.Migrations
                     b.Property<int>("MuscleGroupId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.HasKey("ExerciseId", "MuscleGroupId");
 
                     b.HasIndex("MuscleGroupId");
@@ -199,30 +145,22 @@ namespace GymProject.Infrastructure.Migrations
                         new
                         {
                             ExerciseId = 1,
-                            MuscleGroupId = 6,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false
+                            MuscleGroupId = 6
                         },
                         new
                         {
                             ExerciseId = 2,
-                            MuscleGroupId = 6,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false
+                            MuscleGroupId = 6
                         },
                         new
                         {
                             ExerciseId = 3,
-                            MuscleGroupId = 7,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false
+                            MuscleGroupId = 7
                         },
                         new
                         {
                             ExerciseId = 4,
-                            MuscleGroupId = 7,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false
+                            MuscleGroupId = 7
                         });
                 });
 
@@ -233,12 +171,6 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.Property<int>("WorkoutId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("ExerciseId", "WorkoutId");
 
@@ -255,12 +187,6 @@ namespace GymProject.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -275,57 +201,41 @@ namespace GymProject.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Quadriceps"
                         },
                         new
                         {
                             Id = 2,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Hamstrings"
                         },
                         new
                         {
                             Id = 3,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Calves"
                         },
                         new
                         {
                             Id = 4,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Chest"
                         },
                         new
                         {
                             Id = 5,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Back"
                         },
                         new
                         {
                             Id = 6,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Biceps"
                         },
                         new
                         {
                             Id = 7,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Triceps"
                         },
                         new
                         {
                             Id = 8,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsDeleted = false,
                             Name = "Shoulders"
                         });
                 });
@@ -341,9 +251,6 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Education")
                         .HasColumnType("nvarchar(max)")
@@ -364,9 +271,6 @@ namespace GymProject.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasComment("A picture of the Trainer");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Slogan")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -375,6 +279,8 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ExerciseId");
+
                     b.ToTable("Trainers");
 
                     b.HasData(
@@ -382,36 +288,30 @@ namespace GymProject.Infrastructure.Migrations
                         {
                             Id = 1,
                             Age = 30,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Education = "Certified Personal Trainer",
                             ExerciseId = 1,
                             FullName = "Larry Wheels",
                             ImageUrl = "https://giants-live.com/app/uploads/2022/01/larry-wheels.jpg",
-                            IsDeleted = false,
                             Slogan = "Train hard, win easy"
                         },
                         new
                         {
                             Id = 2,
                             Age = 25,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Education = "Bachelor's Degree in Exercise Science",
                             ExerciseId = 2,
                             FullName = "Jane Smith",
                             ImageUrl = "https://img.freepik.com/premium-photo/young-female-fitness-personal-trainer-with-notepad-standing-gym-with-thumb-up_146671-31568.jpg",
-                            IsDeleted = false,
                             Slogan = "Fitness is a journey, not a destination"
                         },
                         new
                         {
                             Id = 3,
                             Age = 27,
-                            DeleteTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Education = "Certified Personal Trainer",
                             ExerciseId = 3,
                             FullName = "John Doe",
                             ImageUrl = "https://t3.ftcdn.net/jpg/06/45/17/94/360_F_645179444_EtQDcQw5Mcyv1MSH25K5FrEkb3LfH5Vk.jpg",
-                            IsDeleted = false,
                             Slogan = "Train hard, win easy"
                         });
                 });
@@ -423,12 +323,6 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.HasKey("WorkoutId", "UserId");
 
@@ -455,9 +349,6 @@ namespace GymProject.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasComment("Workout Creator either User or Admin");
 
-                    b.Property<DateTime>("DeleteTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -476,9 +367,6 @@ namespace GymProject.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)")
                         .HasComment("A picture representing the workout");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -702,7 +590,7 @@ namespace GymProject.Infrastructure.Migrations
                     b.HasOne("GymProject.Infrastructure.Data.Models.Exercise", "Exercise")
                         .WithMany("ExerciseMuscleGroups")
                         .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GymProject.Infrastructure.Data.Models.MuscleGroup", "MuscleGroup")
@@ -721,7 +609,7 @@ namespace GymProject.Infrastructure.Migrations
                     b.HasOne("GymProject.Infrastructure.Data.Models.Exercise", "Exercise")
                         .WithMany("ExerciseWorkouts")
                         .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("GymProject.Infrastructure.Data.Models.Workout", "Workout")
@@ -733,6 +621,17 @@ namespace GymProject.Infrastructure.Migrations
                     b.Navigation("Exercise");
 
                     b.Navigation("Workout");
+                });
+
+            modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Trainer", b =>
+                {
+                    b.HasOne("GymProject.Infrastructure.Data.Models.Exercise", "FavouriteExcercise")
+                        .WithMany()
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FavouriteExcercise");
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.UserWorkout", b =>

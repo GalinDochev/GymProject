@@ -6,10 +6,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GymProject.Infrastructure.Data.Interfaces;
 
 namespace GymProject.Infrastructure.Data.Models
 {
-    public class UserWorkout
+    public class UserWorkout : IDeletable
     {
         [Required]
         [ForeignKey(nameof(WorkoutId))]
@@ -25,5 +26,12 @@ namespace GymProject.Infrastructure.Data.Models
 
         [Required]
         public IdentityUser User { get; set; } = null!;
+
+        private bool _isDeleted;
+        public bool IsDeleted { get => _isDeleted; set => _isDeleted = value; }
+
+        private DateTime _DeleteTime;
+        public DateTime DeleteTime { get => _DeleteTime; set => _DeleteTime = value; }
+
     }
 }

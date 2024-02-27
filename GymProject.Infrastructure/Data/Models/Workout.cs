@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GymProject.Infrastructure.Data.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static GymProject.Infrastructure.Constants.WorkoutDataConstants;
 namespace GymProject.Infrastructure.Data.Models
 {
-    public class Workout
+    public class Workout : IDeletable
     {
         [Key]
         [Comment("Workout identifier")]
@@ -30,7 +31,7 @@ namespace GymProject.Infrastructure.Data.Models
         public int Duration { get; set; }
 
         [Required]
-        [Range(MinWorkoutLevelLength,MaxWorkoutLevelLength)]
+        [Range(MinWorkoutLevelLength, MaxWorkoutLevelLength)]
         [Comment("Workout Difficulty 1-10 levels")]
         public int DifficultyLevel { get; set; }
 
@@ -50,5 +51,11 @@ namespace GymProject.Infrastructure.Data.Models
 
         public ICollection<ExerciseWorkout> ExerciseWorkouts { get; set; } = new List<ExerciseWorkout>();
         public ICollection<UserWorkout> UsersWorkouts { get; set; } = new List<UserWorkout>();
+
+        private bool _isDeleted;
+        public bool IsDeleted { get => _isDeleted; set => _isDeleted = value; }
+
+        private DateTime _DeleteTime;
+        public DateTime DeleteTime { get => _DeleteTime; set => _DeleteTime = value; }
     }
 }
