@@ -23,7 +23,7 @@ namespace GymProject.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           // modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ExerciseConfiguration());
             modelBuilder.ApplyConfiguration(new ExerciseMuscleGroupConfiguration());
             modelBuilder.ApplyConfiguration(new MuscleGroupConfiguration());

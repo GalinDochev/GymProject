@@ -39,7 +39,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WorkoutCategories");
+                    b.ToTable("WorkoutCategories", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Exercise", b =>
@@ -80,49 +80,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Excercises");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Description = "Description of Dumbbell Biceps Curl",
-                            DifficultyLevel = 6,
-                            ImageUrl = "https://cdn-0.weighttraining.guide/wp-content/uploads/2016/05/Dumbbell-Alternate-Biceps-Curl-resized.png?ezimgfmt=ng%3Awebp%2Fngcb4",
-                            Name = "Dumbbell Biceps Curl",
-                            Repetitions = 10,
-                            Sets = 4
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Description = "Description of Barbell Biceps Curl",
-                            DifficultyLevel = 7,
-                            ImageUrl = "https://kinxlearning.com/cdn/shop/files/exercise-41_1400x.jpg?v=1613157966",
-                            Name = "Barbell Biceps curl",
-                            Repetitions = 12,
-                            Sets = 4
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Description = "Description of Triceps French Curl",
-                            DifficultyLevel = 8,
-                            ImageUrl = "https://www.fitstep.com/2/2-how-to-build-muscle/muscle-and-strength-questions/graphics/french-curl.gif",
-                            Name = "Triceps French Curl",
-                            Repetitions = 8,
-                            Sets = 4
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Description = "Description of Cable Rope Pushdown",
-                            DifficultyLevel = 7,
-                            ImageUrl = "https://static.strengthlevel.com/images/illustrations/tricep-rope-pushdown-1000x1000.jpg",
-                            Name = "Cable Rope Pushdown",
-                            Repetitions = 12,
-                            Sets = 4
-                        });
+                    b.ToTable("Excercises", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.ExerciseMuscleGroup", b =>
@@ -137,29 +95,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("MuscleGroupId");
 
-                    b.ToTable("ExerciseMuscleGroup");
-
-                    b.HasData(
-                        new
-                        {
-                            ExerciseId = 1,
-                            MuscleGroupId = 6
-                        },
-                        new
-                        {
-                            ExerciseId = 2,
-                            MuscleGroupId = 6
-                        },
-                        new
-                        {
-                            ExerciseId = 3,
-                            MuscleGroupId = 7
-                        },
-                        new
-                        {
-                            ExerciseId = 4,
-                            MuscleGroupId = 7
-                        });
+                    b.ToTable("ExerciseMuscleGroup", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.ExerciseWorkout", b =>
@@ -174,7 +110,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("WorkoutId");
 
-                    b.ToTable("ExerciseWorkouts");
+                    b.ToTable("ExerciseWorkouts", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.MuscleGroup", b =>
@@ -193,49 +129,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MuscleGroups");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Quadriceps"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Hamstrings"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Calves"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Chest"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Back"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Biceps"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Triceps"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Shoulders"
-                        });
+                    b.ToTable("MuscleGroups", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Trainer", b =>
@@ -279,54 +173,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("Trainers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Age = 30,
-                            Education = "Certified Personal Trainer",
-                            ExerciseId = 1,
-                            FullName = "Larry Wheels",
-                            ImageUrl = "https://giants-live.com/app/uploads/2022/01/larry-wheels.jpg",
-                            Slogan = "Train hard, win easy"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Age = 25,
-                            Education = "Bachelor's Degree in Exercise Science",
-                            ExerciseId = 2,
-                            FullName = "Jane Smith",
-                            ImageUrl = "https://img.freepik.com/premium-photo/young-female-fitness-personal-trainer-with-notepad-standing-gym-with-thumb-up_146671-31568.jpg",
-                            Slogan = "Fitness is a journey, not a destination"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Age = 27,
-                            Education = "Certified Personal Trainer",
-                            ExerciseId = 3,
-                            FullName = "John Doe",
-                            ImageUrl = "https://t3.ftcdn.net/jpg/06/45/17/94/360_F_645179444_EtQDcQw5Mcyv1MSH25K5FrEkb3LfH5Vk.jpg",
-                            Slogan = "Train hard, win easy"
-                        });
-                });
-
-            modelBuilder.Entity("GymProject.Infrastructure.Data.Models.UserWorkout", b =>
-                {
-                    b.Property<int>("WorkoutId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("WorkoutId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UsersWorkouts");
+                    b.ToTable("Trainers", (string)null);
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Workout", b =>
@@ -378,7 +225,7 @@ namespace GymProject.Infrastructure.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.ToTable("Workouts");
+                    b.ToTable("Workouts", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -624,31 +471,12 @@ namespace GymProject.Infrastructure.Migrations
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Trainer", b =>
                 {
                     b.HasOne("GymProject.Infrastructure.Data.Models.Exercise", "FavouriteExcercise")
-                        .WithMany()
+                        .WithMany("TrainersWithThisFavouriteExcercise")
                         .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FavouriteExcercise");
-                });
-
-            modelBuilder.Entity("GymProject.Infrastructure.Data.Models.UserWorkout", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GymProject.Infrastructure.Data.Models.Workout", "Workout")
-                        .WithMany("UsersWorkouts")
-                        .HasForeignKey("WorkoutId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("Workout");
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Workout", b =>
@@ -731,6 +559,8 @@ namespace GymProject.Infrastructure.Migrations
                     b.Navigation("ExerciseMuscleGroups");
 
                     b.Navigation("ExerciseWorkouts");
+
+                    b.Navigation("TrainersWithThisFavouriteExcercise");
                 });
 
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.MuscleGroup", b =>
@@ -741,8 +571,6 @@ namespace GymProject.Infrastructure.Migrations
             modelBuilder.Entity("GymProject.Infrastructure.Data.Models.Workout", b =>
                 {
                     b.Navigation("ExerciseWorkouts");
-
-                    b.Navigation("UsersWorkouts");
                 });
 #pragma warning restore 612, 618
         }
