@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GymProject.Infrastructure.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using static GymProject.Infrastructure.Constants.ExcerciseDataConstants;
 namespace GymProject.Infrastructure.Data.Models
 {
-    public class Exercise
+    public class Exercise : IDeletable
     {
         [Key]
         [Comment("Excercise identifier")]
@@ -37,5 +38,10 @@ namespace GymProject.Infrastructure.Data.Models
         public ICollection<ExerciseWorkout> ExerciseWorkouts { get; set; } = new List<ExerciseWorkout>();
         public ICollection<ExerciseMuscleGroup> ExerciseMuscleGroups { get; set; } = new List<ExerciseMuscleGroup>();
 
+        private bool _isDeleted;
+        public bool IsDeleted { get => _isDeleted; set => _isDeleted = value; }
+
+        private DateTime _DeleteTime;
+        public DateTime DeleteTime { get => _DeleteTime; set => _DeleteTime = value; }
     }
 }

@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GymProject.Infrastructure.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static GymProject.Infrastructure.Constants.TrainerDataConstants;
 
 namespace GymProject.Infrastructure.Data.Models
 {
-    public class Trainer
+    public class Trainer : IDeletable
     {
         [Key]
         [Comment("Trainer identifier")]
@@ -23,9 +24,7 @@ namespace GymProject.Infrastructure.Data.Models
 
         [Required]
         [Comment("Trainer's Favourite Excercise identifier")]
-        [ForeignKey(nameof(ExerciseId))]
         public int ExerciseId { get; set; }
-        public Exercise FavouriteExcercise { get; set; } = null!;
 
         [Required]
         [Comment("The motto or slogan of the trainer")]
@@ -37,7 +36,12 @@ namespace GymProject.Infrastructure.Data.Models
         public string ImageUrl { get; set; } = string.Empty;
 
         [Comment("Trainers Education if he has one")]
-        public string? Education { get; set; } 
+        public string? Education { get; set; }
 
+        private bool _isDeleted;
+        public bool IsDeleted { get => _isDeleted; set => _isDeleted = value; }
+
+        private DateTime _DeleteTime;
+        public DateTime DeleteTime { get => _DeleteTime; set => _DeleteTime = value; }
     }
 }
