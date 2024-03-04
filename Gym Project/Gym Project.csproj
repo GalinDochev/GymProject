@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GymProject.Common\GymProject.Common.csproj" />
     <ProjectReference Include="..\GymProject.Core\GymProject.Core.csproj" />
   </ItemGroup>
 

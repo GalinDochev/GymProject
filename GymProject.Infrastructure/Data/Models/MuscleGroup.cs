@@ -1,10 +1,10 @@
 ﻿using GymProject.Infrastructure.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using GymProject.Common.Constants.ExcerciseDataConstants;
 
 namespace GymProject.Infrastructure.Data.Models
 {
-    using static GymProject.Infrastructure.Constants.ExcerciseDataConstants;
     public class MuscleGroup : IDeletable
     {
         [Key]
@@ -12,7 +12,7 @@ namespace GymProject.Infrastructure.Data.Models
 
         [Required]
         [Comment("Name of the muscle group")]
-        [MaxLength(MaxMuscleGroupNameLength)]
+        [MaxLength(ExcerciseDataConstants.MaxMuscleGroupNameLength)]
         public string Name { get; set; } = string.Empty;
         public ICollection<ExerciseMuscleGroup> ExerciseMuscleGroups { get; set; } = new List<ExerciseMuscleGroup>();
 

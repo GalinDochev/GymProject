@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static GymProject.Infrastructure.Constants.WorkoutDataConstants;
+using GymProject.Common.Constants.WorkoutDataConstants;
 namespace GymProject.Infrastructure.Data.Models
 {
     public class Workout : IDeletable
@@ -12,12 +12,12 @@ namespace GymProject.Infrastructure.Data.Models
         [Comment("Workout identifier")]
         public int Id { get; set; }
 
-        [MaxLength(MaxWorkoutNameLength)]
+        [MaxLength(WorkoutDataConstants.MaxWorkoutNameLength)]
         [Required]
         [Comment("Workout Name")]
         public string Name { get; set; } = string.Empty;
 
-        [MaxLength(MaxWorkoutDescriptionLength)]
+        [MaxLength(WorkoutDataConstants.MaxWorkoutDescriptionLength)]
         [Required]
         [Comment("Workout Description and tips")]
         public string Description { get; set; } = string.Empty;
@@ -31,7 +31,7 @@ namespace GymProject.Infrastructure.Data.Models
         public int Duration { get; set; }
 
         [Required]
-        [Range(MinWorkoutLevelLength, MaxWorkoutLevelLength)]
+        [Range(WorkoutDataConstants.MinWorkoutLevelLength, WorkoutDataConstants.MaxWorkoutLevelLength)]
         [Comment("Workout Difficulty 1-10 levels")]
         public int DifficultyLevel { get; set; }
 

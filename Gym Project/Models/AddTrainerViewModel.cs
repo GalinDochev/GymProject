@@ -1,13 +1,14 @@
 ﻿using GymProject.Common.Constants.TrainerDataConstants;
-using GymProject.Infrastructure.Data.Interfaces;
+using GymProject.Core.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace GymProject.Infrastructure.Data.Models
+namespace Gym_Project.Models
 {
-    public class Trainer : IDeletable
+    public class AddTrainerViewModel
     {
-        [Key]
+        private int _age = 18; // Default value
+
         [Comment("Trainer identifier")]
         public int Id { get; set; }
 
@@ -19,11 +20,17 @@ namespace GymProject.Infrastructure.Data.Models
 
         [Required]
         [Range(TrainerDataConstants.MinTrainerAge, TrainerDataConstants.MaxTrainerAge)]
-        public int Age { get; set; }
+        public int Age
+        {
+            get { return _age; }
+            set { _age = value; }
+        }
 
         [Required]
-        [Comment("Trainer's Favourite Excercise identifier")]
         public int ExerciseId { get; set; }
+
+        [Required]
+        public List<ExerciseForTrainerDTO> Exercises { get; set; } = new List<ExerciseForTrainerDTO>();
 
         [Required]
         [Comment("The motto or slogan of the trainer")]

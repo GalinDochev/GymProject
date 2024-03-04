@@ -1,0 +1,29 @@
+﻿@using GymProject.Infrastructure.Data.Models;
+@model List<AllTrainersViewModel>
+
+@{
+    ViewData["Title"] = "Our Trainers";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center">Our Trainers</h1>
+    <div class="mt-4 mx-auto" style="width: 40%;">
+        <a class="btn btn-primary btn-lg d-block mx-auto" asp-area="" asp-controller="Trainer" asp-action="AddTrainer">Add Trainer</a>
+    </div>
+    <div class="row mt-4">
+        @foreach (var trainer in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@trainer.ImageUrl" class="card-img-top" alt="Trainer Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@trainer.FullName</h5>
+                        <p class="card-text">@trainer.Age</p>
+                        <p class="card-text">@trainer.Slogan</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Trainer" asp-action="ViewProfile" asp-route-id="@trainer.Id">View Profile</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

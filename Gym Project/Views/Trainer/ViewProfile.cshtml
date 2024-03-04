@@ -1,0 +1,23 @@
+﻿@model TrainerProfileViewModel
+
+@{
+    ViewData["Title"] = "Trainer Profile";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="@Model.ImageUrl" class="img-fluid rounded" alt="Trainer Image">
+        </div>
+        <div class="col-md-8">
+            <h1>@Model.FullName</h1>
+            <p>Age: @Model.Age</p>
+            <p>Favourite Exercise: @Model.FavouriteExercise</p>
+            <p>Slogan: @Model.Slogan</p>
+            @if (!string.IsNullOrEmpty(Model.Education))
+            {
+                <p>Education: @Model.Education</p>
+            }
+        </div>
+    </div>
+</div>

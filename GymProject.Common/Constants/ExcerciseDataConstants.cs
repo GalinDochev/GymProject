@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymProject.Infrastructure.Constants
+namespace GymProject.Common.Constants.ExcerciseDataConstants
 {
     public class ExcerciseDataConstants
     {
