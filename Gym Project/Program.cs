@@ -1,9 +1,15 @@
+using GymProject.Infrastructure.Data.Models;
+using GymProject.Infrastructure.Data.Repositories;
+using GymProject.Infrastructure.Data.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddApplicationDContext(builder.Configuration);
 builder.Services.AddApplicationIdentity(builder.Configuration);
-
+builder.Services.AddScoped<Repository<Trainer>, TrainersRepository>();
+builder.Services.AddScoped<Repository<Exercise>, ExerciseRepository>();
+builder.Services.AddScoped<TrainersService>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationServices();
