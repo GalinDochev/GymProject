@@ -17,9 +17,9 @@
                 <div class="card">
                     <img src="@trainer.ImageUrl" class="card-img-top" alt="Trainer Image">
                     <div class="card-body">
-                        <h5 class="card-title">@trainer.FullName</h5>
-                        <p class="card-text">@trainer.Age</p>
-                        <p class="card-text">@trainer.Slogan</p>
+                        <h5 class="card-title">Name: @trainer.FullName</h5>
+                        <p class="card-text">Age: @trainer.Age</p>
+                        <p class="card-text">Slogan: @trainer.Slogan</p>
                         <a class="btn btn-primary" asp-area="" asp-controller="Trainer" asp-action="ViewProfile" asp-route-id="@trainer.Id">View Profile</a>
                     </div>
                 </div>

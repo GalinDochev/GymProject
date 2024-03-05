@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymProject.Infrastructure.Data.Services
+namespace GymProject.Core.Services
 {
     public class TrainersService
     {
@@ -57,12 +57,24 @@ namespace GymProject.Infrastructure.Data.Services
 
         public async Task <AddTrainerDTO> GetTrainerView()
         {
-            var exercises=await exerciseRepository.GetAll();
+            var exercises=await exerciseRepository.GetAllNotDeleted();
             var exerciSelected=exercises.Select(x => new ExerciseForTrainerDTO { Id=x.Id, Name=x.Name}).ToList();
-
-            var model = new AddTrainerDTO { Exercises = exerciSelected ,Age=18};
+            var model = new AddTrainerDTO { Exercises = exerciSelected };
             return model;
         }
 
+        public async Task AddTrainer(AddTrainerDTO trainer)
+        {
+            var trainerToAdd = new Trainer {
+                Id = trainer.Id,
+                Age = trainer.Age,
+                Education = trainer.Education,
+                ExerciseId = trainer.ExerciseId,
+                FullName = trainer.FullName,
+                ImageUrl = trainer.ImageUrl,
+                Slogan = trainer.Slogan
+            };
+           await trainerRepository.Add(trainerToAdd);
+        }
     }
 }

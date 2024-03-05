@@ -10,8 +10,6 @@ namespace GymProject.Infrastructure.Data.Models
         [Key]
         [Comment("Trainer identifier")]
         public int Id { get; set; }
-
-
         [Required]
         [MaxLength(TrainerDataConstants.MaxTrainerNameLength)]
         [Comment("Trainer's Full Name")]

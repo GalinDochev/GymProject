@@ -45,7 +45,16 @@ namespace GymProject.Infrastructure.Data.Repositories
 
         public async Task Delete(TEntity entity)
         {
-            _context.Set<TEntity>().Remove(entity);
+            if (entity is IDeletable deletableEntity)
+            {
+                deletableEntity.IsDeleted = true;
+                deletableEntity.DeleteTime = DateTime.Now;
+            }
+            else
+            {
+                throw new InvalidOperationException("Entity does not support soft delete.");
+            }
+
             await _context.SaveChangesAsync();
         }
 

@@ -1,21 +1,23 @@
 ﻿using Gym_Project.Models;
 using GymProject.Core.DTOs;
 using GymProject.Infrastructure.Data.Models;
-using GymProject.Infrastructure.Data.Services;
+using GymProject.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gym_Project.Controllers
 {
     public class TrainerController : Controller
     {
-        private TrainersService _service;
-        public TrainerController(TrainersService service)
+        private TrainersService _trainerService;
+        private ExerciseService _exerciseService;
+        public TrainerController(TrainersService trainerService, ExerciseService exerciseService)
         {
-            _service = service;
+            _trainerService = trainerService;
+            _exerciseService = exerciseService;
         }
         public async Task<IActionResult> Index()
         {
-            var trainersDTO = await _service.GetAllNotDeletedTrainers();
+            var trainersDTO = await _trainerService.GetAllNotDeletedTrainers();
             var trainers = trainersDTO.Select(t => new AllTrainersViewModel
             {
                 FullName = t.FullName,
@@ -30,7 +32,7 @@ namespace Gym_Project.Controllers
 
         public async Task<IActionResult> ViewProfile(int Id)
         {
-            var trainerDTO = await _service.GetTrainerByIdForProfile(Id);
+            var trainerDTO = await _trainerService.GetTrainerByIdForProfile(Id);
             var trainer = new TrainerProfileViewModel
             {
                 FullName = trainerDTO.FullName,
@@ -47,7 +49,7 @@ namespace Gym_Project.Controllers
         [HttpGet]
         public async Task<IActionResult> AddTrainer()
         {
-            var trainerDTO = await _service.GetTrainerView();
+            var trainerDTO = await _trainerService.GetTrainerView();
             var trainer = new AddTrainerViewModel
             {
                 FullName = trainerDTO.FullName,
@@ -62,6 +64,28 @@ namespace Gym_Project.Controllers
             return View(trainer);
         }
 
-        
+        [HttpPost]
+        public async Task<IActionResult> AddTrainer(AddTrainerViewModel trainer)
+        {
+            if (!ModelState.IsValid)
+            {
+                trainer.Exercises = await _exerciseService.GetAllNotDeletedExForTrainers();
+
+                return View(trainer);
+            }
+            var trainerDTO = new AddTrainerDTO
+            {
+                Id = trainer.Id,
+                Age = trainer.Age,
+                Education = trainer.Education,
+                ExerciseId = trainer.ExerciseId,
+                FullName = trainer.FullName,
+                ImageUrl = trainer.ImageUrl,
+                Slogan = trainer.Slogan
+            };
+
+            await _trainerService.AddTrainer(trainerDTO);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

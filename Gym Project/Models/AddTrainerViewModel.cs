@@ -7,8 +7,6 @@ namespace Gym_Project.Models
 {
     public class AddTrainerViewModel
     {
-        private int _age = 18; // Default value
-
         [Comment("Trainer identifier")]
         public int Id { get; set; }
 
@@ -20,11 +18,7 @@ namespace Gym_Project.Models
 
         [Required]
         [Range(TrainerDataConstants.MinTrainerAge, TrainerDataConstants.MaxTrainerAge)]
-        public int Age
-        {
-            get { return _age; }
-            set { _age = value; }
-        }
+        public int Age { get; set; }
 
         [Required]
         public int ExerciseId { get; set; }
