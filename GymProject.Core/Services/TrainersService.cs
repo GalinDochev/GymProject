@@ -76,5 +76,37 @@ namespace GymProject.Core.Services
             };
            await trainerRepository.Add(trainerToAdd);
         }
+
+        public async Task<AddTrainerDTO> GetTrainerByIdForEdit (int id)
+        {
+            var trainer= await trainerRepository.GetById(id);
+            var  exercises = await exerciseRepository.GetAllNotDeleted();
+            var exerciSelected = exercises.Select(x => new ExerciseForTrainerDTO { Id = x.Id, Name = x.Name }).ToList();
+            var trainerDTO = new AddTrainerDTO
+            {
+                Id = trainer.Id,
+                Age = trainer.Age,
+                Education = trainer.Education,
+                ExerciseId = trainer.ExerciseId,
+                FullName = trainer.FullName,
+                ImageUrl = trainer.ImageUrl,
+                Slogan = trainer.Slogan,
+                Exercises=exerciSelected
+            };
+            return trainerDTO;
+        }
+
+        public async Task EditTrainer(AddTrainerDTO trainerDTO)
+        {
+            var trainerToEdit = await trainerRepository.GetById(trainerDTO.Id);
+            trainerToEdit.Id = trainerDTO.Id;
+            trainerToEdit.FullName = trainerDTO.FullName;
+            trainerToEdit.Age=trainerDTO.Age;
+            trainerToEdit.ExerciseId = trainerDTO.ExerciseId;
+            trainerToEdit.Education= trainerDTO.Education;
+            trainerToEdit.Slogan = trainerDTO.Slogan;
+            trainerToEdit.ImageUrl= trainerDTO.ImageUrl;
+            await trainerRepository.Update(trainerToEdit);
+        }
     }
 }

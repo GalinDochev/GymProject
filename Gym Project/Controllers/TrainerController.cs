@@ -3,6 +3,7 @@ using GymProject.Core.DTOs;
 using GymProject.Infrastructure.Data.Models;
 using GymProject.Core.Services;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.DependencyResolver;
 
 namespace Gym_Project.Controllers
 {
@@ -85,6 +86,46 @@ namespace Gym_Project.Controllers
             };
 
             await _trainerService.AddTrainer(trainerDTO);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task <IActionResult> EditTrainer (int Id)
+        {
+            var trainerDTO=await _trainerService.GetTrainerByIdForEdit(Id);
+            var trainer = new AddTrainerViewModel
+            {
+                FullName = trainerDTO.FullName,
+                Age = trainerDTO.Age,
+                Id = trainerDTO.Id,
+                Slogan = trainerDTO.Slogan,
+                Education = trainerDTO.Education,
+                ImageUrl = trainerDTO.ImageUrl,
+                ExerciseId = trainerDTO.ExerciseId,
+                Exercises = trainerDTO.Exercises
+            };
+            return View(trainer);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditTrainer(AddTrainerViewModel trainerViewModel, int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                trainerViewModel.Exercises = await _exerciseService.GetAllNotDeletedExForTrainers();
+
+                return View(trainerViewModel);
+            }
+            var trainerDTO = new AddTrainerDTO
+            {
+                Id = trainerViewModel.Id,
+                Age = trainerViewModel.Age,
+                Education = trainerViewModel.Education,
+                ExerciseId = trainerViewModel.ExerciseId,
+                FullName = trainerViewModel.FullName,
+                ImageUrl = trainerViewModel.ImageUrl,
+                Slogan = trainerViewModel.Slogan
+            };
+            await _trainerService.EditTrainer(trainerDTO);
             return RedirectToAction(nameof(Index));
         }
     }
