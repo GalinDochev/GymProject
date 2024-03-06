@@ -128,5 +128,11 @@ namespace Gym_Project.Controllers
             await _trainerService.EditTrainer(trainerDTO);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> DeleteTrainer (int Id)
+        {
+            await _trainerService.DeleteTrainer(Id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

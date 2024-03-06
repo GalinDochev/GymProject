@@ -9,17 +9,17 @@
     <form asp-action="AddTrainer" method="post">
         <div class="form-group">
             <label asp-for="@Model.FullName" class="form-label-add-edit">Full Name:</label>
-            <input asp-for="@Model.FullName" class="form-control" aria-required="true" />
+            <input asp-for="@Model.FullName" class="form-control" aria-required="true" placeholder="Trainer's full name" />
             <span asp-validation-for="@Model.FullName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.Age" class="form-label-add-edit">Age:</label>
-            <input asp-for="@Model.Age" class="form-control" aria-required="true" />
+            <input asp-for="@Model.Age" class="form-control" aria-required="true"  />
             <span asp-validation-for="@Model.Age" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="@Model.ExerciseId" class="form-label-add-edit">Select Category</label>
-            <select asp-for="@Model.ExerciseId" class="form-control" aria-required="true">
+            <label asp-for="@Model.ExerciseId" class="form-label-add-edit">Select Favourite Exercise</label>
+            <select asp-for="@Model.ExerciseId" class="form-control" aria-required="true" placeholder="Select exercise...">
                 <option disabled selected value="">Select Exercise...</option>
                 @foreach (var category in Model.Exercises)
                 {
@@ -30,17 +30,17 @@
         </div>
         <div class="form-group">
             <label asp-for="@Model.Slogan" class="form-label-add-edit">Slogan:</label>
-            <input asp-for="@Model.Slogan" class="form-control" aria-required="true" />
+            <input asp-for="@Model.Slogan" class="form-control" aria-required="true" placeholder="Trainer's slogan" />
             <span asp-validation-for="@Model.Slogan" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.ImageUrl" class="form-label-add-edit">Image URL:</label>
-            <input asp-for="@Model.ImageUrl" class="form-control" aria-required="true" />
+            <input asp-for="@Model.ImageUrl" class="form-control" aria-required="true" placeholder="Trainer's image URL" />
             <span asp-validation-for="@Model.ImageUrl" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.Education" class="form-label-add-edit">Education:</label>
-            <input asp-for="@Model.Education" class="form-control" aria-required="true" />
+            <input asp-for="@Model.Education" class="form-control" aria-required="true" placeholder="Trainer's education" />
             <span asp-validation-for="@Model.Education" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Add Trainer</button>

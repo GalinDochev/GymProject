@@ -108,5 +108,12 @@ namespace GymProject.Core.Services
             trainerToEdit.ImageUrl= trainerDTO.ImageUrl;
             await trainerRepository.Update(trainerToEdit);
         }
+
+        public async Task DeleteTrainer(int Id)
+        {
+            var trainerForDelete=await trainerRepository.GetById(Id);
+
+            await trainerRepository.Delete(trainerForDelete);
+        }
     }
 }
