@@ -1,0 +1,25 @@
+﻿@using Gym_Project.Models.ExerciseModels;
+@model List<AllExercisesViewModel>
+
+@{
+    ViewData["Title"] = "Exercise List";
+}
+
+<div class="container mt-5">
+    <h1 class="text-center">Exercise List</h1>
+    <div class="row">
+        @foreach (var exercise in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="@exercise.ImageUrl" class="card-img-top" alt="Exercise Image">
+                    <div class="card-body">
+                        <h5 class="card-title">Exercise Name: @exercise.Name</h5>
+                        <p class="card-text">Difficulty Level: @exercise.DifficultyLevel / 10</p>
+                        <p class="card-text">MuscleGroups: @exercise.MuscleGroups</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

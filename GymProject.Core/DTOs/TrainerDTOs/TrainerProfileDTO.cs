@@ -6,19 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymProject.Core.DTOs
+namespace GymProject.Core.DTOs.TrainerDTOs
 {
-    public class TrainerCardDTO
+    public class TrainerProfileDTO
     {
         public int Id { get; set; }
+
 
         public string FullName { get; set; } = string.Empty;
 
         public int Age { get; set; }
 
-        public string ImageUrl { get; set; } = string.Empty;
+        public string FavouriteExercise { get; set; } = string.Empty;
 
         public string Slogan { get; set; } = string.Empty;
+
+        public string ImageUrl { get; set; } = string.Empty;
+
+        public string? Education { get; set; }
 
         private bool _isDeleted;
         public bool IsDeleted { get => _isDeleted; set => _isDeleted = value; }

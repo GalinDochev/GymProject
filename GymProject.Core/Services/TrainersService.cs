@@ -1,4 +1,4 @@
-﻿using GymProject.Core.DTOs;
+﻿using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Infrastructure.Data.Interfaces;
 using GymProject.Infrastructure.Data.Models;
 using GymProject.Infrastructure.Data.Repositories;

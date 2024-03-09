@@ -1,11 +1,8 @@
-﻿using GymProject.Core.DTOs;
+﻿using GymProject.Core.DTOs.ExerciseDTOs;
+using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Infrastructure.Data.Models;
 using GymProject.Infrastructure.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymProject.Core.Services
 {
@@ -14,17 +11,37 @@ namespace GymProject.Core.Services
         private ExerciseRepository exerciseRepository;
         public ExerciseService(Repository<Exercise> exerciseRepo)
         {
-                exerciseRepository=(ExerciseRepository)exerciseRepo;
+            exerciseRepository = (ExerciseRepository)exerciseRepo;
         }
 
         public async Task<List<ExerciseForTrainerDTO>> GetAllNotDeletedExForTrainers()
         {
             var exercises = await exerciseRepository.GetAllNotDeleted();
-            var exercisesDTOs = exercises.Select(e=>new ExerciseForTrainerDTO
+            var exercisesDTOs = exercises.Select(e => new ExerciseForTrainerDTO
             {
-                 Id=e.Id,
-                 Name=e.Name
+                Id = e.Id,
+                Name = e.Name
             }).ToList();
+            return exercisesDTOs;
+        }
+
+
+        public async Task<List<ExerciseCardDTO>> GetAllNotDeletedExercises()
+        {
+            var exercises = await exerciseRepository.GetAllNotDeleted();
+            var exercisesDTOs = exercises.Select(e => new ExerciseCardDTO
+            {
+                Id = e.Id,
+                Name = e.Name,
+                DifficultyLevel = e.DifficultyLevel,
+                ImageUrl = e.ImageUrl,
+                Repetitions = e.Repetitions,
+                Sets = e.Sets,
+                IsDeleted = e.IsDeleted,
+                DeleteTime = e.DeleteTime,
+                MuscleGroups = e.ExerciseMuscleGroups.Select(emg => emg.MuscleGroup.Name).ToList()
+            }
+            ).ToList();
             return exercisesDTOs;
         }
     }

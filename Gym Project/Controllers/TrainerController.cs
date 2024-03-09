@@ -1,9 +1,7 @@
-﻿using Gym_Project.Models;
-using GymProject.Core.DTOs;
-using GymProject.Infrastructure.Data.Models;
+﻿using Gym_Project.Models.TrainerModels;
+using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Core.Services;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.DependencyResolver;
 
 namespace Gym_Project.Controllers
 {

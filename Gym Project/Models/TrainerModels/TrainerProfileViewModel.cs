@@ -1,4 +1,4 @@
-﻿namespace Gym_Project.Models
+﻿namespace Gym_Project.Models.TrainerModels
 {
     public class TrainerProfileViewModel
     {
@@ -9,7 +9,7 @@
 
         public int Age { get; set; }
 
-        public string FavouriteExercise { get; set; }=string.Empty;
+        public string FavouriteExercise { get; set; } = string.Empty;
 
         public string Slogan { get; set; } = string.Empty;
 

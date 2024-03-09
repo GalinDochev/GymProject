@@ -63,7 +63,7 @@ namespace GymProject.Infrastructure.Data.Repositories
             return await _context.Set<TEntity>().ToListAsync();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllNotDeleted()
+        public virtual async Task<IEnumerable<TEntity>> GetAllNotDeleted()
         {
             var isDeletedProperty = typeof(TEntity).GetProperty("IsDeleted");
             if (isDeletedProperty == null || isDeletedProperty.PropertyType != typeof(bool))

@@ -14,6 +14,7 @@ namespace GymProject.Infrastructure.Data
         }
 
         public DbSet<Workout> Workouts { get; set; }
+        public DbSet<ExerciseMuscleGroup> ExerciseMuscleGroup { get; set; }
         public DbSet<Exercise> Excercises { get; set; }
         public DbSet<MuscleGroup> MuscleGroups { get; set; }
         public DbSet<Trainer> Trainers { get; set; }

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GymProject.Core.DTOs
+namespace GymProject.Core.DTOs.TrainerDTOs
 {
     public class ExerciseForTrainerDTO
     {

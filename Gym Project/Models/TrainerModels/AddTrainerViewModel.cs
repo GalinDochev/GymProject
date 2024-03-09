@@ -1,21 +1,23 @@
-﻿using GymProject.Infrastructure.Data.Models;
+﻿using GymProject.Common.Constants.TrainerDataConstants;
+using GymProject.Core.DTOs.TrainerDTOs;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-using GymProject.Common.Constants.TrainerDataConstants;
-namespace GymProject.Core.DTOs
+
+namespace Gym_Project.Models.TrainerModels
 {
-    public class AddTrainerDTO
+    public class AddTrainerViewModel
     {
-        [Key]
         [Comment("Trainer identifier")]
         public int Id { get; set; }
 
 
         [Required]
+        [MaxLength(TrainerDataConstants.MaxTrainerNameLength)]
         [Comment("Trainer's Full Name")]
         public string FullName { get; set; } = string.Empty;
 
         [Required]
+        [Range(TrainerDataConstants.MinTrainerAge, TrainerDataConstants.MaxTrainerAge)]
         public int Age { get; set; }
 
         [Required]
@@ -26,6 +28,7 @@ namespace GymProject.Core.DTOs
 
         [Required]
         [Comment("The motto or slogan of the trainer")]
+        [MaxLength(TrainerDataConstants.MaxTrainerSloganLength)]
         public string Slogan { get; set; } = string.Empty;
 
         [Required]
