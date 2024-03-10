@@ -44,5 +44,23 @@ namespace GymProject.Core.Services
             ).ToList();
             return exercisesDTOs;
         }
+
+        public async Task<ExerciseDetailsDTO> GetExerciseByIdForDetails(int Id)
+        {
+            var exercise = await exerciseRepository.GetById(Id);
+
+            var exerciseDTO = new ExerciseDetailsDTO
+            {
+                Name = exercise.Name,
+                Id = exercise.Id,
+                Description=exercise.Description,
+                DifficultyLevel = exercise.DifficultyLevel,
+                ImageUrl = exercise.ImageUrl,
+                MuscleGroups = exercise.ExerciseMuscleGroups.Select(emg => emg.MuscleGroup.Name).ToList(),
+                Repetitions = exercise.Repetitions,
+                Sets = exercise.Sets,
+            };
+            return exerciseDTO;
+        }
     }
 }

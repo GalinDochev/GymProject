@@ -1,5 +1,6 @@
 ﻿using Gym_Project.Models;
 using Gym_Project.Models.ExerciseModels;
+using Gym_Project.Models.TrainerModels;
 using GymProject.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,23 @@ namespace Gym_Project.Controllers
             }).ToList();
 
             return View(exercises);
+        }
+
+        public async Task<IActionResult> Details(int Id)
+        {
+            var exerciseDTO = await _exerciseService.GetExerciseByIdForDetails(Id);
+            var exercise = new ExerciseDetailsViewModel
+            {
+                Id = exerciseDTO.Id,
+                Name = exerciseDTO.Name,
+                DifficultyLevel = exerciseDTO.DifficultyLevel,
+                ImageUrl = exerciseDTO.ImageUrl,
+                Repetitions = exerciseDTO.Repetitions,
+                Sets = exerciseDTO.Sets,
+                MuscleGroups = string.Join(", ", exerciseDTO.MuscleGroups),
+                Description=exerciseDTO.Description
+            };
+            return View(exercise);
         }
     }
 }

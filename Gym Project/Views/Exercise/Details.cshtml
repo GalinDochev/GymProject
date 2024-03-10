@@ -1,0 +1,34 @@
+﻿@using Gym_Project.Models.ExerciseModels;
+@model ExerciseDetailsViewModel
+@{
+    ViewData["Title"] = "Exercise Details";
+}
+
+<h1>@Model.Name</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <img src="@Model.ImageUrl" alt="Exercise Image" class="img-fluid" />
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <h2>Description</h2>
+            <p>@Model.Description</p>
+        </div>
+
+        <div>
+            <h2>Best Done</h2>
+            <ul class="list-unstyled">
+                <li>Difficulty Level: @Model.DifficultyLevel / 10</li>
+                <li>Repetitions: @Model.Repetitions</li>
+                <li>Sets: @Model.Sets</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Difficulty</h2>
+            <p>Difficulty Level: @Model.DifficultyLevel / 10</p>
+        </div>
+    </div>
+</div>

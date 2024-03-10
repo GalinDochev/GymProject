@@ -19,7 +19,7 @@ namespace GymProject.Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public async Task <TEntity> GetById(int id)
+        public virtual async Task <TEntity> GetById(int id)
         {
            var entity= await _context.Set<TEntity>().FindAsync(id);
             if (entity==null)

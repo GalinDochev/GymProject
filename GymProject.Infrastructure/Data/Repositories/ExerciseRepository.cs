@@ -29,6 +29,20 @@ namespace GymProject.Infrastructure.Data.Repositories
             return exercises;
         }
 
+        public override async Task<Exercise> GetById(int id)
+        {
+            var exercise = await context.Excercises
+                .Include(e => e.ExerciseMuscleGroups)
+                    .ThenInclude(emg => emg.MuscleGroup)
+                .FirstOrDefaultAsync(e => e.Id == id);
+
+            if (exercise == null)
+            {
+                throw new Exception($"Exercise with id {id} is not found.");
+            }
+
+            return exercise;
+        }
 
     }
 }
