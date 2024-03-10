@@ -1,4 +1,5 @@
-﻿using GymProject.Common.Constants.TrainerDataConstants;
+﻿using GymProject.Common.Constants.ExcerciseDataConstants;
+using GymProject.Common.Constants.TrainerDataConstants;
 using GymProject.Core.DTOs.TrainerDTOs;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -12,7 +13,7 @@ namespace Gym_Project.Models.TrainerModels
 
 
         [Required]
-        [MaxLength(TrainerDataConstants.MaxTrainerNameLength)]
+        [StringLength(TrainerDataConstants.MaxTrainerNameLength, MinimumLength = TrainerDataConstants.MinTrainerNameLength)]
         [Comment("Trainer's Full Name")]
         public string FullName { get; set; } = string.Empty;
 
@@ -28,11 +29,12 @@ namespace Gym_Project.Models.TrainerModels
 
         [Required]
         [Comment("The motto or slogan of the trainer")]
-        [MaxLength(TrainerDataConstants.MaxTrainerSloganLength)]
+        [StringLength(TrainerDataConstants.MaxTrainerSloganLength, MinimumLength = TrainerDataConstants.MinTrainerSloganLength)]
         public string Slogan { get; set; } = string.Empty;
 
         [Required]
         [Comment("A picture of the Trainer")]
+        [Url(ErrorMessage = "Please enter a valid URL")]
         public string ImageUrl { get; set; } = string.Empty;
 
         [Comment("Trainers Education if he has one")]

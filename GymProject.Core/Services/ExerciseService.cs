@@ -53,7 +53,7 @@ namespace GymProject.Core.Services
             {
                 Name = exercise.Name,
                 Id = exercise.Id,
-                Description=exercise.Description,
+                Description = exercise.Description,
                 DifficultyLevel = exercise.DifficultyLevel,
                 ImageUrl = exercise.ImageUrl,
                 MuscleGroups = exercise.ExerciseMuscleGroups.Select(emg => emg.MuscleGroup.Name).ToList(),
@@ -61,6 +61,56 @@ namespace GymProject.Core.Services
                 Sets = exercise.Sets,
             };
             return exerciseDTO;
+        }
+
+        public async Task<AddExerciseDTO> GetExerciseViewModel()
+        {
+            var muscleGroups = await exerciseRepository.GetAllMuscleGroups();
+            var model = new AddExerciseDTO
+            {
+                SelectedMuslceGroups = muscleGroups
+            };
+
+            return model;
+        }
+
+        public async Task<List<string>> GetMuscleGroupsNames()
+        {
+            var muscleGroups = await exerciseRepository.GetAllMuscleGroups();
+            var muscleGroupsNames = muscleGroups.Select(m => m.Name).ToList();
+            return muscleGroupsNames;
+        }
+
+        public async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
+        {
+
+            var muscleGroups = await exerciseRepository.GetMuscleGroupsByName(muscleGroupNames);
+            return muscleGroups;
+        }
+
+        public async Task AddExercise(AddExerciseDTO exercise)
+        {
+            var exerciseToAdd = new Exercise
+            {
+                Id = exercise.Id,
+                Description = exercise.Description,
+                DifficultyLevel = exercise.DifficultyLevel,
+                Name = exercise.Name,
+                Sets = exercise.Sets,
+                Repetitions = exercise.Repetitions,
+                ImageUrl = exercise.ImageUrl,
+            };
+            foreach (var muscleGroup in exercise.SelectedMuslceGroups)
+            {
+                var exerciseMuscleGroup = new ExerciseMuscleGroup
+                {
+                    ExerciseId = exerciseToAdd.Id,
+                    MuscleGroupId = muscleGroup.Id
+                };
+
+                exerciseToAdd.ExerciseMuscleGroups.Add(exerciseMuscleGroup);
+            }
+            await exerciseRepository.Add(exerciseToAdd);
         }
     }
 }

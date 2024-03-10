@@ -40,9 +40,22 @@ namespace GymProject.Infrastructure.Data.Repositories
             {
                 throw new Exception($"Exercise with id {id} is not found.");
             }
-
+            
             return exercise;
         }
 
+       public async Task<List<MuscleGroup>> GetAllMuscleGroups()
+        {
+            var muscleGroups = await context.MuscleGroups.Where(m => m.IsDeleted == false).ToListAsync();
+            return muscleGroups;
+        }
+
+        public async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
+        {
+            // Query the database to find MuscleGroup entities with names matching the provided list of names
+            return await context.MuscleGroups
+                .Where(m => muscleGroupNames.Contains(m.Name))
+                .ToListAsync();
+        }
     }
 }

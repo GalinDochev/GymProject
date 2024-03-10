@@ -7,6 +7,9 @@
 
 <div class="container mt-5">
     <h1 class="text-center">Exercise List</h1>
+    <div class="mt-4 mx-auto" style="width: 40%;">
+        <a class="btn btn-primary btn-lg d-block mx-auto" asp-area="" asp-controller="Exercise" asp-action="AddExercise">Add Exercise</a>
+    </div>
     <div class="row">
         @foreach (var exercise in Model)
         {
