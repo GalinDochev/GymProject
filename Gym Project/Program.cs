@@ -8,6 +8,8 @@ builder.Services.AddApplicationDContext(builder.Configuration);
 builder.Services.AddApplicationIdentity(builder.Configuration);
 builder.Services.AddScoped<Repository<Trainer>, TrainersRepository>();
 builder.Services.AddScoped<Repository<Exercise>, ExerciseRepository>();
+builder.Services.AddScoped<Repository<ExerciseMuscleGroup>, ExerciseMuscleGroupRepository>();
+builder.Services.AddScoped<Repository<MuscleGroup>,MuscleGroupRepository>();
 builder.Services.AddScoped<TrainersService>();
 builder.Services.AddScoped<ExerciseService>();
 builder.Services.AddControllersWithViews();

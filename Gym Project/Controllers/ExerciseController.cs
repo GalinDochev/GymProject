@@ -4,6 +4,7 @@ using Gym_Project.Models.TrainerModels;
 using GymProject.Core.DTOs.ExerciseDTOs;
 using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Core.Services;
+using GymProject.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gym_Project.Controllers
@@ -68,28 +69,70 @@ namespace Gym_Project.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddExercise(AddExerciseViewModel exercise)
+        public async Task<IActionResult> AddExercise(AddExerciseViewModel exerciseViewModel)
         {
             if (!ModelState.IsValid)
             {
-                exercise.SelectedMuscleGroups = await _exerciseService.GetMuscleGroupsNames();
+                exerciseViewModel.SelectedMuscleGroups = await _exerciseService.GetMuscleGroupsNames();
 
-                return View(exercise);
+                return View(exerciseViewModel);
             }
-            var muscleGroups = await _exerciseService.GetMuscleGroupsByName(exercise.SelectedMuscleGroups);
+            var muscleGroups = await _exerciseService.GetMuscleGroupsByName(exerciseViewModel.SelectedMuscleGroups);
             var exerciseDTO = new AddExerciseDTO
             {
-                Id = exercise.Id,
-                Name = exercise.Name,
-                Description = exercise.Description,
-                DifficultyLevel = exercise.DifficultyLevel,
-                ImageUrl = exercise.ImageUrl,
-                Repetitions = exercise.Repetitions,
-                Sets = exercise.Sets,
+                Id = exerciseViewModel.Id,
+                Name = exerciseViewModel.Name,
+                Description = exerciseViewModel.Description,
+                DifficultyLevel = exerciseViewModel.DifficultyLevel,
+                ImageUrl = exerciseViewModel.ImageUrl,
+                Repetitions = exerciseViewModel.Repetitions,
+                Sets = exerciseViewModel.Sets,
                 SelectedMuslceGroups = muscleGroups
             };
 
             await _exerciseService.AddExercise(exerciseDTO);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public async Task<IActionResult> EditExercise(int Id)
+        {
+            var exerciseDTO = await _exerciseService.GetExerciseByIdForEdit(Id);
+            var exercise = new AddExerciseViewModel
+            {
+                Id = exerciseDTO.Id,
+                Name = exerciseDTO.Name,
+                Description = exerciseDTO.Description,
+                DifficultyLevel = exerciseDTO.DifficultyLevel,
+                ImageUrl = exerciseDTO.ImageUrl,
+                Repetitions = exerciseDTO.Repetitions,
+                Sets = exerciseDTO.Sets,
+                SelectedMuscleGroups = exerciseDTO.SelectedMuslceGroups.Select(m => m.Name).ToList(),
+            };
+            return View(exercise);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditExercise(AddExerciseViewModel exerciseViewModel, int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                exerciseViewModel.SelectedMuscleGroups = await _exerciseService.GetMuscleGroupsNames();
+
+                return View(exerciseViewModel);
+            }
+            var muscleGroups = await _exerciseService.GetMuscleGroupsByName(exerciseViewModel.SelectedMuscleGroups);
+            var exerciseDTO = new AddExerciseDTO
+            {
+                Id = exerciseViewModel.Id,
+                Name = exerciseViewModel.Name,
+                Description = exerciseViewModel.Description,
+                DifficultyLevel = exerciseViewModel.DifficultyLevel,
+                ImageUrl = exerciseViewModel.ImageUrl,
+                Repetitions = exerciseViewModel.Repetitions,
+                Sets = exerciseViewModel.Sets,
+                SelectedMuslceGroups = muscleGroups
+            };
+            await _exerciseService.EditExercise(exerciseDTO);
             return RedirectToAction(nameof(Index));
         }
     }

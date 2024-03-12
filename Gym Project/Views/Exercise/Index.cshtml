@@ -8,20 +8,23 @@
 <div class="container mt-5">
     <h1 class="text-center">Exercise List</h1>
     <div class="mt-4 mx-auto" style="width: 40%;">
-        <a class="btn btn-primary btn-lg d-block mx-auto" asp-area="" asp-controller="Exercise" asp-action="AddExercise">Add Exercise</a>
+        <a class="btn btn-primary btn-lg d-block mx-auto mb-4" asp-area="" asp-controller="Exercise" asp-action="AddExercise">Add Exercise</a>
     </div>
     <div class="row">
         @foreach (var exercise in Model)
         {
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <img src="@exercise.ImageUrl" class="card-img-top" alt="Exercise Image">
+                    <div style="max-height: 250px; overflow: hidden;">
+                        <img src="@exercise.ImageUrl" class="card-img-top" alt="Exercise Image">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">Exercise Name: @exercise.Name</h5>
                         <p class="card-text">Difficulty Level: @exercise.DifficultyLevel / 10</p>
                         <p class="card-text">MuscleGroups: @exercise.MuscleGroups</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Exercise" asp-action="Details" asp-route-id="@exercise.Id">Details</a>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Exercise" asp-action="EditExercise" asp-route-id="@exercise.Id">Edit Exercise</a>
                     </div>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Exercise" asp-action="Details" asp-route-id="@exercise.Id">Details</a>
                 </div>
             </div>
         }

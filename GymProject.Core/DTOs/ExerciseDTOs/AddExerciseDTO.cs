@@ -26,7 +26,6 @@ namespace GymProject.Core.DTOs.ExerciseDTOs
 
         public int Sets { get; set; }
 
-        public ICollection<ExerciseMuscleGroup> MuscleGroups { get; set; } = new List<ExerciseMuscleGroup>();
         public ICollection<MuscleGroup> SelectedMuslceGroups { get; set; } = new List<MuscleGroup>();
         public ICollection<string> MuscleGroupNames { get; set; } = new List<string>();
     }

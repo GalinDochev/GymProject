@@ -1,0 +1,61 @@
+﻿@using Gym_Project.Models.ExerciseModels;
+@model AddExerciseViewModel
+@{
+    ViewData["Title"] = "Edit Exercise";
+}
+
+<h1>Edit Exercise</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Name">Name:</label>
+        <input type="text" id="Name" name="Name" class="form-control" asp-for="Name" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description:</label>
+        <textarea id="Description" name="Description" class="form-control" asp-for="Description" required></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="DifficultyLevel">Difficulty Level (1-10):</label>
+        <input type="number" id="DifficultyLevel" name="DifficultyLevel" class="form-control" asp-for="DifficultyLevel" min="1" max="10" required />
+        <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Repetitions">Repetitions:</label>
+        <input type="number" id="Repetitions" name="Repetitions" class="form-control" asp-for="Repetitions" min="1" required />
+        <span asp-validation-for="Repetitions" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Sets">Sets:</label>
+        <input type="number" id="Sets" name="Sets" class="form-control" asp-for="Sets" min="1" required />
+        <span asp-validation-for="Sets" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="ImageUrl">Image URL:</label>
+        <input type="text" id="ImageUrl" name="ImageUrl" class="form-control" asp-for="ImageUrl" required />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="SelectedMuscleGroups">Muscle Groups:</label><br />
+        @foreach (var muscleGroup in Model.SelectedMuscleGroups)
+        {
+            <div class="form-check">
+                <input type="checkbox" id="muscleGroup-@muscleGroup" name="SelectedMuscleGroups" value="@muscleGroup" class="form-check-input" />
+                <label for="muscleGroup-@muscleGroup" class="form-check-label">@muscleGroup</label>
+            </div>
+        }
+        <span class="text-danger">
+            <span asp-validation-for="SelectedMuscleGroups" class="text-danger"></span>
+        </span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

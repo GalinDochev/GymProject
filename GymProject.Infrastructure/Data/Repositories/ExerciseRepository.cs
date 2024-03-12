@@ -23,7 +23,7 @@ namespace GymProject.Infrastructure.Data.Repositories
                 .Where(e => e.IsDeleted == false)
                 .Include(e => e.ExerciseMuscleGroups)
                     .ThenInclude(emg => emg.MuscleGroup)
-                .Where(e => !e.ExerciseMuscleGroups.Any(emg => emg.IsDeleted == true))
+                .Where(e => !e.ExerciseMuscleGroups.All(emg => emg.IsDeleted == true))
                 .ToListAsync();
 
             return exercises;
@@ -44,18 +44,6 @@ namespace GymProject.Infrastructure.Data.Repositories
             return exercise;
         }
 
-       public async Task<List<MuscleGroup>> GetAllMuscleGroups()
-        {
-            var muscleGroups = await context.MuscleGroups.Where(m => m.IsDeleted == false).ToListAsync();
-            return muscleGroups;
-        }
-
-        public async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
-        {
-            // Query the database to find MuscleGroup entities with names matching the provided list of names
-            return await context.MuscleGroups
-                .Where(m => muscleGroupNames.Contains(m.Name))
-                .ToListAsync();
-        }
+       
     }
 }
