@@ -198,5 +198,16 @@ namespace GymProject.Core.Services
             }
             await exerciseRepository.Update(exerciseToEdit);
         }
+
+        public async Task DeleteExercise(int Id)
+        {
+            var exerciseToDelete = await exerciseRepository.GetById(Id);
+            foreach (var exerciseMuscleGroup in exerciseToDelete.ExerciseMuscleGroups)
+            {
+                await exerciseMuscleGroupRepository.Delete(exerciseMuscleGroup);
+            }
+
+            await exerciseRepository.Delete(exerciseToDelete);
+        }
     }
 }
