@@ -15,8 +15,10 @@
         @foreach (var trainer in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="card">
-                    <img src="@trainer.ImageUrl" class="card-img-top" alt="Trainer Image">
+                <div class="card h-100">
+                    <div style="max-height: 250px; overflow: hidden;">
+                        <img src="@trainer.ImageUrl" class="card-img-top aspect-ratio-cover" alt="Trainer Image">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">Name: @trainer.FullName</h5>
                         <p class="card-text">Age: @trainer.Age</p>
