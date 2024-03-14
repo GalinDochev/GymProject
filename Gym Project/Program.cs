@@ -10,8 +10,10 @@ builder.Services.AddScoped<Repository<Trainer>, TrainersRepository>();
 builder.Services.AddScoped<Repository<Exercise>, ExerciseRepository>();
 builder.Services.AddScoped<Repository<ExerciseMuscleGroup>, ExerciseMuscleGroupRepository>();
 builder.Services.AddScoped<Repository<MuscleGroup>,MuscleGroupRepository>();
+builder.Services.AddScoped<Repository<Workout>,WorkoutRepository>();
 builder.Services.AddScoped<TrainersService>();
 builder.Services.AddScoped<ExerciseService>();
+builder.Services.AddScoped<WorkoutService>();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddApplicationServices();

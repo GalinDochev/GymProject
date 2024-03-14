@@ -1,0 +1,27 @@
+﻿@using Gym_Project.Models.WorkoutsModels;
+@model IEnumerable<AllWorkoutsViewModel>
+
+@{
+    ViewData["Title"] = "Workouts";
+}
+
+<div class="container">
+    <h1>Workouts</h1>
+    <div class="row">
+        @foreach (var workout in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="@workout.ImageUrl" class="card-img-top" alt="Workout Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@workout.Name</h5>
+                        <p class="card-text">Duration: @workout.Duration minutes</p>
+                        <p class="card-text">Difficulty Level: @workout.DifficultyLevel</p>
+                        <p class="card-text">Category: @workout.Category</p>
+                        <a class="btn btn-primary" asp-area="" asp-controller="Workout" asp-action="Details" asp-route-id="@workout.Id">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
