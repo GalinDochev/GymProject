@@ -4,6 +4,7 @@ using Gym_Project.Models.WorkoutsModels;
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Gym_Project.Controllers
 {
@@ -17,6 +18,7 @@ namespace Gym_Project.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            var userId = GetUserId();
             var workoutsDTOs = await _workoutService.GetAllNotDeletedWorkouts();
             var workouts = workoutsDTOs.Select(e => new AllWorkoutsViewModel
             {
@@ -26,7 +28,11 @@ namespace Gym_Project.Controllers
                 ImageUrl = e.ImageUrl,
                 Category = e.Category.Name,
                 Duration = e.Duration,
-                CreatorId = e.Creator.Id
+                CreatorId = e.Creator.Id,
+                CreatorName = e.Creator.UserName,
+                IsJoined = e.UserWorkouts.Any(uw => uw.UserId == userId &&
+                                                     uw.UserId != e.Creator.Id &&
+                                                     !uw.IsDeleted)
             }).ToList();
 
             return View(workouts);
@@ -34,6 +40,7 @@ namespace Gym_Project.Controllers
 
         public async Task<IActionResult> Details(int Id)
         {
+
             var workoutDTO = await _workoutService.GetWorkoutByIdForDetails(Id);
             var workout = new WorkoutDetailsViewModel
             {
@@ -48,6 +55,35 @@ namespace Gym_Project.Controllers
                 CreatorId = workoutDTO.CreatorId,
             };
             return View(workout);
+        }
+
+        public async Task<IActionResult> JoinWorkout(int Id)
+        {
+            var userId = GetUserId();
+            await _workoutService.JoinWorkout(Id, GetUserId());
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> LeaveWorkout(int Id)
+        {
+            var userId = GetUserId();
+
+            await _workoutService.RemoveWorkoutFromCollectionAsync(Id, userId);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        protected string GetUserId()
+        {
+            string id = string.Empty;
+
+            if (User != null)
+            {
+                id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+
+            return id;
         }
     }
 }

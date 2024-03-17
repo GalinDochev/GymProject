@@ -13,9 +13,11 @@ namespace GymProject.Core.Services
     public class WorkoutService
     {
         private WorkoutRepository workoutRepository;
-        public WorkoutService(Repository<Workout> workoutRepo)
+        private UserWorkoutRepository userWorkoutRepository;
+        public WorkoutService(Repository<Workout> workoutRepo, Repository<UserWorkout> userWorkoutRepo)
         {
             workoutRepository = (WorkoutRepository)workoutRepo;
+            userWorkoutRepository = (UserWorkoutRepository)userWorkoutRepo;
         }
 
 
@@ -32,7 +34,8 @@ namespace GymProject.Core.Services
                 Category = e.Category,
                 CreatorId = e.CreatorId,
                 Creator = e.Creator,
-                Duration = e.Duration
+                Duration = e.Duration,
+                UserWorkouts=e.UsersWorkouts
             }
             ).ToList();
             return workoutsDTOs;
@@ -57,6 +60,49 @@ namespace GymProject.Core.Services
                 ExerciseWorkouts = workout.ExerciseWorkouts,
             };
             return workoutDTO;
+        }
+
+        public async Task JoinWorkout(int Id, string userId)
+        {
+            var workout = await workoutRepository.GetById(Id);
+            var userWorkout = await userWorkoutRepository.GetByUserIdAndWorkoutId(userId, workout.Id);
+            if (workout.CreatorId == userId)
+            {
+                throw new InvalidOperationException("You cannot join a workout that you created.");
+            }
+
+            if (userWorkout != null && userWorkout.IsDeleted==true)
+            {
+                userWorkout.IsDeleted = false;
+                userWorkout.DeleteTime = default;
+                workout.UsersWorkouts.Add(userWorkout);
+                await userWorkoutRepository.Update(userWorkout);
+            }
+            else if (userWorkout == null)
+            {
+                var newUserWorkout = new UserWorkout() { UserId = userId, WorkoutId = workout.Id };
+                workout.UsersWorkouts.Add(newUserWorkout);
+                await userWorkoutRepository.Add(newUserWorkout);
+            }
+        }
+
+        public async Task RemoveWorkoutFromCollectionAsync(int Id,string userId)
+        {
+            var workout = await workoutRepository.GetById(Id);
+            if (workout.CreatorId == userId)
+            {
+                throw new InvalidOperationException("You cannot leave a workout that you created.");
+            }
+            var userWorkout= await userWorkoutRepository.GetByUserIdAndWorkoutId(userId, workout.Id);
+            if (userWorkout!=null && userWorkout.IsDeleted==false)
+            {
+                await userWorkoutRepository.Delete(userWorkout);
+                workout.UsersWorkouts.Remove(userWorkout);
+            }
+            else
+            {
+                throw new Exception($"Workout with id {Id} is not found in the collection of User with id {userId}");
+            }
         }
     }
 }

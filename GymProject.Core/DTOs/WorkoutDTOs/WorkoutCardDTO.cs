@@ -23,5 +23,7 @@ namespace GymProject.Core.DTOs.WorkoutDTOs
         public IdentityUser Creator { get; set; } = null!;
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
+
+        public ICollection<UserWorkout> UserWorkouts { get; set; } = new List<UserWorkout>();
     }
 }

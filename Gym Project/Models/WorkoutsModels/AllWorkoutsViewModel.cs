@@ -11,6 +11,9 @@ namespace Gym_Project.Models.WorkoutsModels
         public int Duration { get; set; }
         public int DifficultyLevel { get; set; }
         public string CreatorId { get; set; } = string.Empty;
+        public string CreatorName { get; set; } = string.Empty;
         public string Category { get; set; } = null!;
+
+        public bool IsJoined { get; set; }
     }
 }

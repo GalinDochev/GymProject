@@ -192,7 +192,7 @@ namespace GymProject.Core.Services
                 {
                     
                     existingAssociation.IsDeleted = false;
-                    existingAssociation.DeleteTime = default; // Reset delete time
+                    existingAssociation.DeleteTime = default;
                     await exerciseMuscleGroupRepository.Update(existingAssociation);
                 }
             }
