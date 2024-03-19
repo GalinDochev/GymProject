@@ -91,11 +91,25 @@ namespace GymProject.Core.Services
             return muscleGroupsNames;
         }
 
+        public async Task<List<string>> GetExercisesNames()
+        {
+            var exercises = await exerciseRepository.GetAllNotDeleted();
+            var exercisesNames = exercises.Select(m => m.Name).ToList();
+            return exercisesNames;
+        }
+
         public async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
         {
 
             var muscleGroups = await muscleGroupRepository.GetMuscleGroupsByName(muscleGroupNames);
             return muscleGroups;
+        }
+
+        public async Task<List<Exercise>> GetExercisesByName(List<string> exercisesNames)
+        {
+
+            var exercises = await exerciseRepository.GetExercisesByName(exercisesNames);
+            return exercises;
         }
 
         public async Task AddExercise(AddExerciseDTO exercise)

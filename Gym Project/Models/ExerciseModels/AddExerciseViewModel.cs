@@ -10,6 +10,7 @@ namespace Gym_Project.Models.ExerciseModels
         public int Id { get; set; }
 
         [StringLength(ExcerciseDataConstants.MaxExcerciseNameLength, MinimumLength = ExcerciseDataConstants.MinExcerciseNameLength)]
+
         [Required]
         public string Name { get; set; } = string.Empty;
 
@@ -33,7 +34,7 @@ namespace Gym_Project.Models.ExerciseModels
         [Range(ExcerciseDataConstants.MinExcerciseSetsLength, ExcerciseDataConstants.MaxExcerciseSetsLength)]
         public int Sets { get; set; }
 
-        [AtLeastOneCheckedMuscleGroupAttribute(ErrorMessage = "At least one muscle group must be selected.")]
+        [AtLeastOneCheckedAttribute(ErrorMessage = "At least one muscle group must be selected.")]
         public List<string> SelectedMuscleGroups { get; set; } = new List<string>();
     }
 }

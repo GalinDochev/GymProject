@@ -1,0 +1,69 @@
+﻿@using Gym_Project.Models.WorkoutsModels;
+@model AddWorkoutViewModel
+
+@{
+    ViewData["Title"] = "Add Workout";
+    ViewData["ButtonLabel"] = "Add Workout";
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    <form method="post" asp-controller="Workout" asp-action="AddWorkout">
+        <div class="form-group">
+            <label for="Name">Name:</label>
+            <input type="text" class="form-control" id="Name" asp-for="Name" required>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Description">Description:</label>
+            <textarea class="form-control" id="Description" rows="4" asp-for="Description" required></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="ImageUrl">Image URL:</label>
+            <input type="url" class="form-control" id="ImageUrl" asp-for="ImageUrl" required>
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Duration">Duration (minutes):</label>
+            <input type="number" class="form-control" id="Duration" asp-for="Duration" min="1" required>
+            <span asp-validation-for="Duration" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="DifficultyLevel">Difficulty Level (1-10):</label>
+            <input type="number" class="form-control" id="DifficultyLevel" asp-for="DifficultyLevel" min="1" max="10" required>
+            <span asp-validation-for="DifficultyLevel" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label>Select Exercises:</label>
+            <div class="form-check">
+                @foreach (var exercise in Model.SelectedExercises)
+                {
+                    <div class="form-check">
+                        <input type="checkbox" id="selectedExercises-@exercise" name="SelectedExercises" value="@exercise" class="form-check-input" />
+                        <label for="selectedExercises-@exercise" class="form-check-label">@exercise</label>
+                    </div>
+                }
+            </div>
+            <span asp-validation-for="SelectedExercises" class="text-danger"></span>
+
+            <div class="form-group">
+                <label asp-for="@Model.Category" class="form-label-add-edit">Select Category</label>
+                <select asp-for="@Model.Category" class="form-control" aria-required="true" placeholder="Select category...">
+                    <option disabled selected value="">Select category...</option>
+                    @foreach (var category in Model.SelectedCategories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Category" class="text-danger"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">@ViewData["ButtonLabel"]</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,4 +1,5 @@
 ﻿using GymProject.Common.Constants.ExcerciseDataConstants;
+using GymProject.Common.Constants.WorkoutDataConstants;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace GymProject.Core.DTOs.TrainerDTOs
         [Comment("Excercise identifier")]
         public int Id { get; set; }
 
-        [MaxLength(ExcerciseDataConstants.MaxExcerciseNameLength)]
         [Required]
+        [StringLength(ExcerciseDataConstants.MaxExcerciseNameLength, MinimumLength = ExcerciseDataConstants.MinExcerciseNameLength)]
         [Comment("Excercise Name")]
         public string Name { get; set; } = string.Empty;
     }

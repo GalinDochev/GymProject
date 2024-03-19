@@ -44,6 +44,11 @@ namespace GymProject.Infrastructure.Data.Repositories
             return exercise;
         }
 
-       
+        public async Task<List<Exercise>> GetExercisesByName(List<string> exerciseNames)
+        {
+            return await context.Excercises
+                .Where(m => exerciseNames.Contains(m.Name))
+                .ToListAsync();
+        }
     }
 }

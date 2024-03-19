@@ -1,6 +1,8 @@
 ﻿using Gym_Project.Models.ExerciseModels;
 using Gym_Project.Models.TrainerModels;
 using Gym_Project.Models.WorkoutsModels;
+using GymProject.Core.DTOs.ExerciseDTOs;
+using GymProject.Core.DTOs.WorkoutDTOs;
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +13,13 @@ namespace Gym_Project.Controllers
     public class WorkoutController : Controller
     {
         private WorkoutService _workoutService;
+        private ExerciseService _exerciseService;
 
-        public WorkoutController(WorkoutService workoutService)
+        public WorkoutController(WorkoutService workoutService, ExerciseService exerciseService)
         {
             _workoutService = workoutService;
+            _exerciseService = exerciseService;
+
         }
         public async Task<IActionResult> Index()
         {
@@ -72,8 +77,52 @@ namespace Gym_Project.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> AddWorkout()
+        {
+            var workoutDTO = await _workoutService.GetWorkoutDTOModel();
+            var workout = new AddWorkoutViewModel
+            {
+                Id = workoutDTO.Id,
+                Name = workoutDTO.Name,
+                DifficultyLevel = workoutDTO.DifficultyLevel,
+                ImageUrl = workoutDTO.ImageUrl,
+                Description = workoutDTO.Description,
+                Duration = workoutDTO.Duration,
+                CreatorId = workoutDTO.CreatorId,
+                SelectedCategories = workoutDTO.SelectedCategories.Select(m => m.Name).ToList(),
+                SelectedExercises = workoutDTO.SelectedExercises.Select(m => m.Name).ToList()
+            };
+            return View(workout);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddWorkout(AddWorkoutViewModel workoutViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                workoutViewModel.SelectedExercises = await _exerciseService.GetExercisesNames();
+                workoutViewModel.SelectedCategories = await _workoutService.GetCategoriesNames();
 
+                return View(workoutViewModel);
+            }
+            var userId = GetUserId();
+            var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
+            var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
+            var workoutDTO = new AddWorkoutDTO
+            {
+                Name = workoutViewModel.Name,
+                Description = workoutViewModel.Description,
+                DifficultyLevel = workoutViewModel.DifficultyLevel,
+                ImageUrl = workoutViewModel.ImageUrl,
+                SelectedExercises = exercises,
+                Duration = workoutViewModel.Duration,
+                CreatorId = userId,
+                Category = category
+            };
 
+            await _workoutService.AddWorkout(workoutDTO);
+            return RedirectToAction(nameof(Index));
+        }
         protected string GetUserId()
         {
             string id = string.Empty;

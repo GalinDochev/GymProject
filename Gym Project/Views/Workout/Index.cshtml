@@ -2,36 +2,38 @@
     @{
         ViewBag.Title = "Our Workouts";
     }
-    <h1>Workouts</h1>
+    <h1 class="text-center">Workouts</h1>
+    <div class="mt-4 mx-auto" style="width: 40%;">
+        <a class="btn btn-primary btn-lg d-block mx-auto mb-4" asp-area="" asp-controller="Workout" asp-action="AddWorkout">Add Workout</a>
+    </div>
     <div class="row">
         @foreach (var workout in Model)
         {
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <img src="@workout.ImageUrl" class="card-img-top" alt="Workout Image">
-                    <div class="card-body">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div style="height: 225px; overflow: hidden;">
+                        <img src="@workout.ImageUrl" class="card-img-top w-100" alt="Workout Image">
+                    </div>
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">@workout.Name</h5>
                         <p class="card-text">Duration: @workout.Duration minutes</p>
                         <p class="card-text">Difficulty Level: @workout.DifficultyLevel</p>
                         <p class="card-text">Category: @workout.Category</p>
-                        <a class="btn btn-primary" asp-area="" asp-controller="Workout" asp-action="Details" asp-route-id="@workout.Id">View Details</a>
-                        
-                        @if (User?.Identity?.IsAuthenticated == true && User.Identity.Name == workout.CreatorName)
-                        {
-                            <a asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@workout.Id" class="btn btn-warning mb-2 w-100 p-3 fw-bold">Edit</a>
-                        }
-                        else if (User?.Identity?.IsAuthenticated == true && workout.IsJoined)
-                        {
-                            <form class="input-group-sm" asp-controller="Workout" asp-action="LeaveWorkout" asp-route-id="@workout.Id">
-                                <input type="submit" value="Leave Workout" class="fs-6 btn btn-danger mb-2 w-100 p-3 fw-bold" />
-                            </form>
-                        }
-                        else if (User?.Identity?.IsAuthenticated == true)
-                        {
-                            <form class="input-group-sm" asp-controller="Workout" asp-action="JoinWorkout" asp-route-id="@workout.Id">
-                                <input type="submit" value="Join Workout" class="fs-6 btn btn-warning mb-2 w-100 p-3 fw-bold" />
-                            </form>
-                        }
+                        <div class="mt-auto mt-0">
+                            <a asp-controller="Workout" asp-action="Details" asp-route-id="@workout.Id" class="btn btn-primary btn-block fw-bold mt-0">View Details</a>
+                            @if (User?.Identity?.IsAuthenticated == true && User.Identity.Name == workout.CreatorName)
+                            {
+                                <a asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@workout.Id" class="btn btn-warning btn-block fw-bold mt-0">Edit Workout</a>
+                            }
+                            else if (User?.Identity?.IsAuthenticated == true && workout.IsJoined)
+                            {
+                                <a asp-controller="Workout" asp-action="LeaveWorkout" asp-route-id="@workout.Id" class="btn btn-danger btn-block fw-bold mt-0">Leave Workout</a>
+                            }
+                            else if (User?.Identity?.IsAuthenticated == true)
+                            {
+                                <a asp-controller="Workout" asp-action="JoinWorkout" asp-route-id="@workout.Id" class="btn btn-warning btn-block fw-bold mt-0">Join Workout</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
