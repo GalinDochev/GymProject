@@ -13,6 +13,7 @@ builder.Services.AddScoped<Repository<MuscleGroup>,MuscleGroupRepository>();
 builder.Services.AddScoped<Repository<Workout>,WorkoutRepository>();
 builder.Services.AddScoped<Repository<UserWorkout>,UserWorkoutRepository>();
 builder.Services.AddScoped<Repository<Category>,CategoryRepository>();
+builder.Services.AddScoped<Repository<ExerciseWorkout>,ExerciseWorkoutRepository>();
 builder.Services.AddScoped<TrainersService>();
 builder.Services.AddScoped<ExerciseService>();
 builder.Services.AddScoped<WorkoutService>();

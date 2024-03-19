@@ -11,16 +11,19 @@ namespace GymProject.Core.Services
         private ExerciseRepository exerciseRepository;
         private ExerciseMuscleGroupRepository exerciseMuscleGroupRepository;
         private MuscleGroupRepository muscleGroupRepository;
+        private ExerciseWorkoutRepository exerciseWorkoutRepository;
         public ExerciseService
             (
             Repository<Exercise> exerciseRepo,
             Repository<ExerciseMuscleGroup> exerciseMuscleGroupRepo,
-            Repository<MuscleGroup>muscleGroupRepo
+            Repository<MuscleGroup>muscleGroupRepo,
+            Repository<ExerciseWorkout>exerciseWorkoutRepo
             )
         {
             exerciseRepository = (ExerciseRepository)exerciseRepo;
             exerciseMuscleGroupRepository = (ExerciseMuscleGroupRepository)exerciseMuscleGroupRepo;
             muscleGroupRepository = (MuscleGroupRepository)muscleGroupRepo;
+            exerciseWorkoutRepository = (ExerciseWorkoutRepository)exerciseWorkoutRepo;
         }
 
         public async Task<List<ExerciseForTrainerDTO>> GetAllNotDeletedExForTrainers()
@@ -219,6 +222,10 @@ namespace GymProject.Core.Services
             foreach (var exerciseMuscleGroup in exerciseToDelete.ExerciseMuscleGroups)
             {
                 await exerciseMuscleGroupRepository.Delete(exerciseMuscleGroup);
+            }
+            foreach (var exerciseWorkout in exerciseToDelete.ExerciseWorkouts)
+            {
+                await exerciseWorkoutRepository.Delete(exerciseWorkout);
             }
 
             await exerciseRepository.Delete(exerciseToDelete);

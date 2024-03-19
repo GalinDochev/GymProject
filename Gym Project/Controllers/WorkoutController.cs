@@ -123,6 +123,59 @@ namespace Gym_Project.Controllers
             await _workoutService.AddWorkout(workoutDTO);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditWorkout(int Id)
+        {
+            var workoutDTO = await _workoutService.GetWorkoutByIdForEdit(Id);
+            var userId = GetUserId();
+            if (userId!=workoutDTO.CreatorId)
+            {
+                throw new InvalidOperationException("You cant edit a workout that you havent created");
+            }
+            var workoutViewModel = new AddWorkoutViewModel
+            {
+                Name = workoutDTO.Name,
+                Id = workoutDTO.Id,
+                Duration = workoutDTO.Duration,
+                CreatorId = workoutDTO.CreatorId,
+                Description = workoutDTO.Description,
+                DifficultyLevel = workoutDTO.DifficultyLevel,
+                ImageUrl = workoutDTO.ImageUrl,
+                SelectedExercises = workoutDTO.SelectedExercises.Select(m => m.Name).ToList(),
+                SelectedCategories = workoutDTO.SelectedCategories.Select(m => m.Name).ToList()
+            };
+            return View(workoutViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditWorkout(AddWorkoutViewModel workoutViewModel, int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                workoutViewModel.SelectedExercises = await _exerciseService.GetExercisesNames();
+                workoutViewModel.SelectedCategories = await _workoutService.GetCategoriesNames();
+
+                return View(workoutViewModel);
+            }
+            var userId = GetUserId();
+            var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
+            var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
+            var workoutDTO = new AddWorkoutDTO
+            {
+                Name = workoutViewModel.Name,
+                Id=workoutViewModel.Id,
+                Description = workoutViewModel.Description,
+                DifficultyLevel = workoutViewModel.DifficultyLevel,
+                ImageUrl = workoutViewModel.ImageUrl,
+                SelectedExercises = exercises,
+                Duration = workoutViewModel.Duration,
+                CreatorId = userId,
+                Category = category
+            };
+            await _workoutService.EditWorkout(workoutDTO);
+            return RedirectToAction(nameof(Index));
+        }
         protected string GetUserId()
         {
             string id = string.Empty;

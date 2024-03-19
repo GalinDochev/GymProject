@@ -16,12 +16,19 @@ namespace GymProject.Core.Services
         private CategoryRepository categoryRepository;
         private UserWorkoutRepository userWorkoutRepository;
         private ExerciseRepository exerciseRepository;
-        public WorkoutService(Repository<Workout> workoutRepo, Repository<UserWorkout> userWorkoutRepo, Repository<Exercise> exerciseRepo, Repository<Category> categoryRepo)
+        private ExerciseWorkoutRepository exerciseWorkoutRepository;
+        public WorkoutService
+            (Repository<Workout> workoutRepo,
+            Repository<UserWorkout> userWorkoutRepo,
+            Repository<Exercise> exerciseRepo,
+            Repository<Category> categoryRepo,
+            Repository<ExerciseWorkout> exerciseWorkoutRepo)
         {
             workoutRepository = (WorkoutRepository)workoutRepo;
             userWorkoutRepository = (UserWorkoutRepository)userWorkoutRepo;
             exerciseRepository = (ExerciseRepository)exerciseRepo;
             categoryRepository = (CategoryRepository)categoryRepo;
+            exerciseWorkoutRepository = (ExerciseWorkoutRepository)exerciseWorkoutRepo;
         }
 
 
@@ -61,7 +68,7 @@ namespace GymProject.Core.Services
                 CreatorId = workout.CreatorId,
                 CategoryId = workout.CategoryId,
                 Duration = workout.Duration,
-                ExerciseWorkouts = workout.ExerciseWorkouts,
+                ExerciseWorkouts = workout.ExerciseWorkouts.Where(ew=>ew.IsDeleted==false).ToList(),
             };
             return workoutDTO;
         }
@@ -147,9 +154,9 @@ namespace GymProject.Core.Services
                 Name = workoutDTO.Name,
                 ImageUrl = workoutDTO.ImageUrl,
                 Duration = workoutDTO.Duration,
-                Category= workoutDTO.Category,
-                CreatorId= workoutDTO.CreatorId,
-                CategoryId=workoutDTO.Category.Id
+                Category = workoutDTO.Category,
+                CreatorId = workoutDTO.CreatorId,
+                CategoryId = workoutDTO.Category.Id
             };
             foreach (var exercise in workoutDTO.SelectedExercises)
             {
@@ -168,6 +175,77 @@ namespace GymProject.Core.Services
             };
             workoutToAdd.UsersWorkouts.Add(userWorkout);
             await workoutRepository.Add(workoutToAdd);
+        }
+
+        public async Task<AddWorkoutDTO> GetWorkoutByIdForEdit(int id)
+        {
+            var workout = await workoutRepository.GetById(id);
+            var selectedExercises = await exerciseRepository.GetAllNotDeleted();
+            var selectedCategories = await categoryRepository.GetAllNotDeleted();
+            var workoutDTO = new AddWorkoutDTO
+            {
+                Name = workout.Name,
+                Id = workout.Id,
+                CreatorId = workout.CreatorId,
+                Description = workout.Description,
+                DifficultyLevel = workout.DifficultyLevel,
+                ImageUrl = workout.ImageUrl,
+                Duration = workout.Duration,
+                SelectedExercises = selectedExercises.ToList(),
+                SelectedCategories = selectedCategories.ToList(),
+            };
+            return workoutDTO;
+        }
+
+        public async Task EditWorkout(AddWorkoutDTO workoutDTO)
+        {
+            var workoutToEdit = await workoutRepository.GetById(workoutDTO.Id);
+            workoutToEdit.Name = workoutDTO.Name;
+            workoutToEdit.Id = workoutDTO.Id;
+            workoutToEdit.DifficultyLevel = workoutDTO.DifficultyLevel;
+            workoutToEdit.Description = workoutDTO.Description;
+            workoutToEdit.ImageUrl = workoutDTO.ImageUrl;
+            workoutToEdit.Duration = workoutDTO.Duration;
+            workoutToEdit.Category = workoutDTO.Category;
+            workoutToEdit.CategoryId = workoutDTO.Category.Id;
+            var existingExercises = workoutToEdit.ExerciseWorkouts.ToList();
+
+            foreach (var existingExercise in existingExercises)
+            {
+                if (!workoutDTO.SelectedExercises.Any(mg => mg.Id == existingExercise.ExerciseId))
+                {
+                    if (!existingExercise.IsDeleted)
+                    {
+                        await exerciseWorkoutRepository.Delete(existingExercise);
+                    }
+                }
+            }
+
+            foreach (var exercise in workoutDTO.SelectedExercises)
+            {
+                var existingAssociation = existingExercises.FirstOrDefault(emg => emg.ExerciseId == exercise.Id);
+
+                if (existingAssociation == null)
+                {
+                    var exerciseWorkout = new ExerciseWorkout
+                    {
+                        WorkoutId = workoutToEdit.Id,
+                        ExerciseId = exercise.Id
+                    };
+
+                    workoutToEdit.ExerciseWorkouts.Add(exerciseWorkout);
+
+                    await exerciseWorkoutRepository.Add(exerciseWorkout);
+                }
+                else if (existingAssociation.IsDeleted)
+                {
+
+                    existingAssociation.IsDeleted = false;
+                    existingAssociation.DeleteTime = default;
+                    await exerciseWorkoutRepository.Update(existingAssociation);
+                }
+            }
+            await workoutRepository.Update(workoutToEdit);
         }
     }
 }
