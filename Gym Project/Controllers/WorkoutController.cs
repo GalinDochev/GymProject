@@ -176,6 +176,12 @@ namespace Gym_Project.Controllers
             await _workoutService.EditWorkout(workoutDTO);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> DeleteWorkout(int Id)
+        {
+            await _workoutService.DeleteWorkout(Id);
+            return RedirectToAction(nameof(Index));
+        }
         protected string GetUserId()
         {
             string id = string.Empty;

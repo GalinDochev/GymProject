@@ -247,5 +247,20 @@ namespace GymProject.Core.Services
             }
             await workoutRepository.Update(workoutToEdit);
         }
+
+        public async Task DeleteWorkout(int Id)
+        {
+            var workoutToDelete = await workoutRepository.GetById(Id);
+            foreach (var exerciseWorkout in workoutToDelete.ExerciseWorkouts)
+            {
+                await exerciseWorkoutRepository.Delete(exerciseWorkout);
+            }
+            foreach (var userWorkout in workoutToDelete.UsersWorkouts)
+            {
+                await userWorkoutRepository.Delete(userWorkout);
+            }
+
+            await workoutRepository.Delete(workoutToDelete);
+        }
     }
 }

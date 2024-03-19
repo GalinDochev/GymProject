@@ -23,7 +23,10 @@
                             <a asp-controller="Workout" asp-action="Details" asp-route-id="@workout.Id" class="btn btn-primary btn-block fw-bold mt-0">View Details</a>
                             @if (User?.Identity?.IsAuthenticated == true && User.Identity.Name == workout.CreatorName)
                             {
-                                <a asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@workout.Id" class="btn btn-warning btn-block fw-bold mt-0">Edit Workout</a>
+                                <div class="d-flex">
+                                    <a asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@workout.Id" class="btn btn-warning btn-block fw-bold mt-2">Edit Workout</a>
+                                    <a asp-controller="Workout" asp-action="DeleteWorkout" asp-route-id="@workout.Id" class="btn btn-danger btn-block fw-bold mt-2 mx-1">Delete Workout</a>
+                                </div>
                             }
                             else if (User?.Identity?.IsAuthenticated == true && workout.IsJoined)
                             {
