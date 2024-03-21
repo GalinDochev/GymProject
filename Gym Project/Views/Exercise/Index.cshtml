@@ -1,4 +1,4 @@
-﻿@using Gym_Project.Models.ExerciseModels;
+﻿@using Gym_Project.Models.ExerciseModels
 @model List<AllExercisesViewModel>
 
 @{
@@ -9,6 +9,14 @@
     <h1 class="text-center">Exercise List</h1>
     <div class="mt-4 mx-auto" style="width: 40%;">
         <a class="btn btn-primary btn-lg d-block mx-auto mb-4" asp-area="" asp-controller="Exercise" asp-action="AddExercise">Add Exercise</a>
+    </div>
+    <div class="col-md-6 mb-4" style="max-width: 300px;">
+        <form asp-action="Index" asp-controller="Exercise" method="get" class="d-flex">
+            <div class="flex-grow-1 me-2">
+                <input type="text" class="form-control form-control-sm" name="searchString" value="@ViewBag.SearchString" placeholder="Search by exercise name">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+        </form>
     </div>
     <div class="row">
         @foreach (var exercise in Model)
@@ -30,4 +38,14 @@
             </div>
         }
     </div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(ViewBag.PageNumber == i ? "active" : "")">
+                    <a class="page-link" href="?pageNumber=@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>

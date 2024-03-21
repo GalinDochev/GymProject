@@ -13,7 +13,7 @@ namespace Gym_Project.Models.WorkoutsModels
         public string CreatorId { get; set; } = string.Empty;
         public string CreatorName { get; set; } = string.Empty;
         public string Category { get; set; } = null!;
-
+        public string SearchString { get; set; } = string.Empty;
         public bool IsJoined { get; set; }
     }
 }

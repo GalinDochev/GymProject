@@ -262,5 +262,38 @@ namespace GymProject.Core.Services
 
             await workoutRepository.Delete(workoutToDelete);
         }
+
+        public List<WorkoutCardDTO> ApplySearchFilter(List<WorkoutCardDTO> workoutsDTOs, string searchString)
+        {
+            if (string.IsNullOrEmpty(searchString))
+                return workoutsDTOs;
+
+            var lowerCaseSearchString = searchString.ToLower();
+            return workoutsDTOs.Where(w => w.Name.ToLower().Contains(lowerCaseSearchString)).ToList();
+        }
+        public List<WorkoutCardDTO> ApplyCategoryFilter(List<WorkoutCardDTO> workoutsDTOs, string category)
+        {
+            if (string.IsNullOrEmpty(category))
+                return workoutsDTOs;
+
+            return workoutsDTOs.Where(w => w.Category.Name == category).ToList();
+        }
+        public List<WorkoutCardDTO> ApplyDifficultyLevelFilter(List<WorkoutCardDTO> workoutsDTOs, string difficultyLevelGroup)
+        {
+            if (string.IsNullOrEmpty(difficultyLevelGroup))
+                return workoutsDTOs;
+
+            switch (difficultyLevelGroup)
+            {
+                case "1-3":
+                    return workoutsDTOs.Where(w => w.DifficultyLevel >= 1 && w.DifficultyLevel <= 3).ToList();
+                case "4-7":
+                    return workoutsDTOs.Where(w => w.DifficultyLevel >= 4 && w.DifficultyLevel <= 7).ToList();
+                case "8-10":
+                    return workoutsDTOs.Where(w => w.DifficultyLevel >= 8 && w.DifficultyLevel <= 10).ToList();
+                default:
+                    return workoutsDTOs;
+            }
+        }
     }
 }

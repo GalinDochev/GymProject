@@ -1,6 +1,7 @@
 ﻿using Gym_Project.Models;
 using Gym_Project.Models.ExerciseModels;
 using Gym_Project.Models.TrainerModels;
+using GymProject.Common.Constants;
 using GymProject.Core.DTOs.ExerciseDTOs;
 using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Core.Services;
@@ -16,19 +17,38 @@ namespace Gym_Project.Controllers
         {
             _exerciseService = exerciseService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index
+            (string searchString,
+            int pageNumber = PaginationConstants.PageNumber,
+            int pageSize = PaginationConstants.PageSize)
+
         {
             var exercisesDTOs = await _exerciseService.GetAllNotDeletedExercises();
-            var exercises = exercisesDTOs.Select(e => new AllExercisesViewModel
+            if (!string.IsNullOrEmpty(searchString))
             {
-                Id = e.Id,
-                Name = e.Name,
-                DifficultyLevel = e.DifficultyLevel,
-                ImageUrl = e.ImageUrl,
-                Repetitions = e.Repetitions,
-                Sets = e.Sets,
-                MuscleGroups = string.Join(", ", e.MuscleGroups)
-            }).ToList();
+                var lowerCaseSearchString = searchString.ToLower();
+                exercisesDTOs = exercisesDTOs.Where(e => e.Name.ToLower().Contains(lowerCaseSearchString)).ToList();
+            }
+            var totalRecords = exercisesDTOs.Count;
+            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            var exercises = exercisesDTOs
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(e => new AllExercisesViewModel
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    DifficultyLevel = e.DifficultyLevel,
+                    ImageUrl = e.ImageUrl,
+                    Repetitions = e.Repetitions,
+                    Sets = e.Sets,
+                    MuscleGroups = string.Join(", ", e.MuscleGroups)
+                }).ToList();
+
+            ViewBag.SearchString = searchString ?? string.Empty;
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.TotalPages = totalPages;
 
             return View(exercises);
         }

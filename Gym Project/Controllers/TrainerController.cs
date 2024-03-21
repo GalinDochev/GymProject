@@ -1,4 +1,5 @@
 ﻿using Gym_Project.Models.TrainerModels;
+using GymProject.Common.Constants;
 using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Core.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,18 +15,38 @@ namespace Gym_Project.Controllers
             _trainerService = trainerService;
             _exerciseService = exerciseService;
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchString,
+            int pageNumber = PaginationConstants.PageNumber, 
+            int pageSize = PaginationConstants.PageSize)
         {
             var trainersDTO = await _trainerService.GetAllNotDeletedTrainers();
-            var trainers = trainersDTO.Select(t => new AllTrainersViewModel
+
+            if (!string.IsNullOrEmpty(searchString))
             {
-                FullName = t.FullName,
-                Age = t.Age,
-                Id = t.Id,
-                ImageUrl = t.ImageUrl,
-                Slogan = t.Slogan
+                var lowerCaseSearchString = searchString.ToLower();
+                trainersDTO = trainersDTO.Where(t => t.FullName.ToLower().Contains(lowerCaseSearchString)).ToList();
             }
-            ).ToList();
+
+            var totalRecords = trainersDTO.Count;
+            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            var trainers = trainersDTO
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new AllTrainersViewModel
+                {
+                    FullName = t.FullName,
+                    Age = t.Age,
+                    Id = t.Id,
+                    ImageUrl = t.ImageUrl,
+                    Slogan = t.Slogan
+                }).ToList();
+
+            ViewBag.SearchString = searchString ?? string.Empty;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.CurrentPage = pageNumber;
+
             return View(trainers);
         }
 

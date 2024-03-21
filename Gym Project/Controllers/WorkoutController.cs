@@ -1,6 +1,7 @@
 ﻿using Gym_Project.Models.ExerciseModels;
 using Gym_Project.Models.TrainerModels;
 using Gym_Project.Models.WorkoutsModels;
+using GymProject.Common.Constants;
 using GymProject.Core.DTOs.ExerciseDTOs;
 using GymProject.Core.DTOs.WorkoutDTOs;
 using GymProject.Core.Services;
@@ -21,11 +22,33 @@ namespace Gym_Project.Controllers
             _exerciseService = exerciseService;
 
         }
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string searchString,
+            string category,
+            string difficultyLevelGroup,
+            int pageNumber = PaginationConstants.PageNumber,
+            int pageSize = PaginationConstants.PageSize)
         {
             var userId = GetUserId();
             var workoutsDTOs = await _workoutService.GetAllNotDeletedWorkouts();
-            var workouts = workoutsDTOs.Select(e => new AllWorkoutsViewModel
+
+            workoutsDTOs = _workoutService.ApplySearchFilter(workoutsDTOs, searchString);
+
+            workoutsDTOs = _workoutService.ApplyCategoryFilter(workoutsDTOs, category);
+
+            workoutsDTOs = _workoutService.ApplyDifficultyLevelFilter(workoutsDTOs, difficultyLevelGroup);
+
+            var categoryNames = await _workoutService.GetCategoriesNames();
+            ViewBag.Categories = categoryNames;
+
+
+            var totalRecords = workoutsDTOs.Count;
+            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            var workouts = workoutsDTOs
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(e => new AllWorkoutsViewModel
             {
                 Id = e.Id,
                 Name = e.Name,
@@ -39,7 +62,9 @@ namespace Gym_Project.Controllers
                                                      uw.UserId != e.Creator.Id &&
                                                      !uw.IsDeleted)
             }).ToList();
-
+            ViewBag.SearchString = searchString ?? string.Empty;
+            ViewBag.PageNumber = pageNumber;
+            ViewBag.TotalPages = totalPages;
             return View(workouts);
         }
 
