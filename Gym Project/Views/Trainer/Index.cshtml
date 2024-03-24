@@ -10,9 +10,12 @@
 
 <div class="container mt-5">
     <h1 class="text-center">Our Trainers</h1>
-    <div class="mt-4 mx-auto" style="width: 40%;">
-        <a class="btn btn-primary btn-lg d-block mx-auto" asp-area="" asp-controller="Trainer" asp-action="AddTrainer">Add Trainer</a>
-    </div>
+    @if (User?.Identity?.IsAuthenticated == true)
+    {
+        <div class="mt-4 mx-auto" style="width: 40%;">
+            <a class="btn btn-primary btn-lg d-block mx-auto" asp-area="" asp-controller="Trainer" asp-action="AddTrainer">Add Trainer</a>
+        </div>
+    }
     <div class="col-md-6 mb-4" style="max-width: 300px;">
         <form asp-action="Index" asp-controller="Trainer" method="get" class="d-flex">
             <div class="flex-grow-1 me-2">

@@ -6,11 +6,13 @@ using GymProject.Core.DTOs.ExerciseDTOs;
 using GymProject.Core.DTOs.WorkoutDTOs;
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Gym_Project.Controllers
 {
+    [Authorize]
     public class WorkoutController : Controller
     {
         private WorkoutService _workoutService;
@@ -22,6 +24,7 @@ namespace Gym_Project.Controllers
             _exerciseService = exerciseService;
 
         }
+        [AllowAnonymous]
         public async Task<IActionResult> Index(
             string searchString,
             string category,
@@ -68,6 +71,7 @@ namespace Gym_Project.Controllers
             return View(workouts);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int Id)
         {
 
@@ -86,6 +90,7 @@ namespace Gym_Project.Controllers
             };
             return View(workout);
         }
+
 
         public async Task<IActionResult> JoinWorkout(int Id)
         {

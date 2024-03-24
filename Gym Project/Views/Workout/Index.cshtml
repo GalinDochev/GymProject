@@ -5,10 +5,12 @@
         ViewBag.Title = "Our Workouts";
     }
     <h1 class="text-center">Workouts</h1>
+     @if (User?.Identity?.IsAuthenticated == true)
+    {
     <div class="mt-4 mx-auto" style="width: 40%;">
         <a class="btn btn-primary btn-lg d-block mx-auto mb-4" asp-area="" asp-controller="Workout" asp-action="AddWorkout">Add Workout</a>
     </div>
-
+    }
     <div class="row justify-content-center">
         <div class="col-md-6 mb-4" style="max-width: 300px;">
             <form asp-action="Index" asp-controller="Workout" method="get" class="d-flex">

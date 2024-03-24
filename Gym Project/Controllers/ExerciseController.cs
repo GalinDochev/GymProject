@@ -6,10 +6,12 @@ using GymProject.Core.DTOs.ExerciseDTOs;
 using GymProject.Core.DTOs.TrainerDTOs;
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Gym_Project.Controllers
 {
+    [Authorize]
     public class ExerciseController : Controller
     {
         private ExerciseService _exerciseService;
@@ -17,6 +19,7 @@ namespace Gym_Project.Controllers
         {
             _exerciseService = exerciseService;
         }
+        [AllowAnonymous]
         public async Task<IActionResult> Index
             (string searchString,
             int pageNumber = PaginationConstants.PageNumber,
@@ -53,6 +56,7 @@ namespace Gym_Project.Controllers
             return View(exercises);
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int Id)
         {
             var exerciseDTO = await _exerciseService.GetExerciseByIdForDetails(Id);
