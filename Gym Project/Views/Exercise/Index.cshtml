@@ -7,7 +7,7 @@
 
 <div class="container mt-5">
     <h1 class="text-center">Exercise List</h1>
-     @if (User?.Identity?.IsAuthenticated == true)
+    @if (User.IsInRole("Admin"))
     {
         <div class="mt-4 mx-auto" style="width: 40%;">
             <a class="btn btn-primary btn-lg d-block mx-auto mb-4" asp-area="" asp-controller="Exercise" asp-action="AddExercise">Add Exercise</a>
@@ -34,8 +34,11 @@
                         <p class="card-text">Difficulty Level: @exercise.DifficultyLevel / 10</p>
                         <p class="card-text">MuscleGroups: @exercise.MuscleGroups</p>
                         <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Exercise" asp-action="Details" asp-route-id="@exercise.Id">Details</a>
-                        <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Exercise" asp-action="EditExercise" asp-route-id="@exercise.Id">Edit Exercise</a>
-                        <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Exercise" asp-action="DeleteExercise" asp-route-id="@exercise.Id">Delete Exercise</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Exercise" asp-action="EditExercise" asp-route-id="@exercise.Id">Edit Exercise</a>
+                            <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Exercise" asp-action="DeleteExercise" asp-route-id="@exercise.Id">Delete Exercise</a>
+                        }
                     </div>
                 </div>
             </div>

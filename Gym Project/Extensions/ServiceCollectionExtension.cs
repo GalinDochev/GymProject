@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddDefaultIdentity<IdentityUser>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = false;
 
                 // Password requirements
                 options.Password.RequireDigit = true;
@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
             })
-              //.AddRoles<IdentityUser>()
+               .AddRoles<IdentityRole>()
                .AddEntityFrameworkStores<ApplicationDbContext>();
             return services;
         }

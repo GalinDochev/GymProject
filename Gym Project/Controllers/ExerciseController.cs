@@ -73,7 +73,7 @@ namespace Gym_Project.Controllers
             };
             return View(exercise);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> AddExercise()
         {
@@ -91,7 +91,7 @@ namespace Gym_Project.Controllers
             };
             return View(exercise);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddExercise(AddExerciseViewModel exerciseViewModel)
         {
@@ -117,6 +117,7 @@ namespace Gym_Project.Controllers
             await _exerciseService.AddExercise(exerciseDTO);
             return RedirectToAction(nameof(Index));
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> EditExercise(int Id)
         {
@@ -134,7 +135,7 @@ namespace Gym_Project.Controllers
             };
             return View(exercise);
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> EditExercise(AddExerciseViewModel exerciseViewModel, int Id)
         {
@@ -159,7 +160,7 @@ namespace Gym_Project.Controllers
             await _exerciseService.EditExercise(exerciseDTO);
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteExercise(int Id)
         {
             await _exerciseService.DeleteExercise(Id);

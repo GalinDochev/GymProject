@@ -91,7 +91,7 @@ namespace Gym_Project.Controllers
             return View(workout);
         }
 
-
+        
         public async Task<IActionResult> JoinWorkout(int Id)
         {
             var userId = GetUserId();
@@ -209,7 +209,8 @@ namespace Gym_Project.Controllers
 
         public async Task<IActionResult> DeleteWorkout(int Id)
         {
-            await _workoutService.DeleteWorkout(Id);
+            var userId = GetUserId();
+            await _workoutService.DeleteWorkout(Id,userId);
             return RedirectToAction(nameof(Index));
         }
         protected string GetUserId()

@@ -200,6 +200,10 @@ namespace GymProject.Core.Services
         public async Task EditWorkout(AddWorkoutDTO workoutDTO)
         {
             var workoutToEdit = await workoutRepository.GetById(workoutDTO.Id);
+            if (workoutToEdit.CreatorId!=workoutDTO.CreatorId)
+            {
+                throw new Exception("You cannot edit a workout that you havent created");
+            }
             workoutToEdit.Name = workoutDTO.Name;
             workoutToEdit.Id = workoutDTO.Id;
             workoutToEdit.DifficultyLevel = workoutDTO.DifficultyLevel;
@@ -248,9 +252,13 @@ namespace GymProject.Core.Services
             await workoutRepository.Update(workoutToEdit);
         }
 
-        public async Task DeleteWorkout(int Id)
+        public async Task DeleteWorkout(int Id,string userId)
         {
             var workoutToDelete = await workoutRepository.GetById(Id);
+            if (workoutToDelete.CreatorId!=userId)
+            {
+                throw new Exception("You cant Delete a workout that you havent created");
+            }
             foreach (var exerciseWorkout in workoutToDelete.ExerciseWorkouts)
             {
                 await exerciseWorkoutRepository.Delete(exerciseWorkout);

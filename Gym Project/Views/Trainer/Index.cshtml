@@ -1,5 +1,8 @@
 ﻿@using GymProject.Infrastructure.Data.Models;
 @using Gym_Project.Models.TrainerModels
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @model List<AllTrainersViewModel>
 
 @{
@@ -10,7 +13,7 @@
 
 <div class="container mt-5">
     <h1 class="text-center">Our Trainers</h1>
-    @if (User?.Identity?.IsAuthenticated == true)
+    @if (User.IsInRole("Admin"))
     {
         <div class="mt-4 mx-auto" style="width: 40%;">
             <a class="btn btn-primary btn-lg d-block mx-auto" asp-area="" asp-controller="Trainer" asp-action="AddTrainer">Add Trainer</a>
@@ -37,8 +40,11 @@
                         <p class="card-text">Age: @trainer.Age</p>
                         <p class="card-text">Slogan: @trainer.Slogan</p>
                         <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Trainer" asp-action="ViewProfile" asp-route-id="@trainer.Id">View Profile</a>
-                        <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Trainer" asp-action="EditTrainer" asp-route-id="@trainer.Id">Edit Trainer</a>
-                        <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Trainer" asp-action="DeleteTrainer" asp-route-id="@trainer.Id">Delete Trainer</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Trainer" asp-action="EditTrainer" asp-route-id="@trainer.Id">Edit Trainer</a>
+                            <a class="btn btn-primary btn-block fw-bold mt-0" asp-area="" asp-controller="Trainer" asp-action="DeleteTrainer" asp-route-id="@trainer.Id">Delete Trainer</a>
+                        }
                     </div>
                 </div>
             </div>
