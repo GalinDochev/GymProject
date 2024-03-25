@@ -26,14 +26,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.SignIn.RequireConfirmedAccount = true;
 
                 // Password requirements
-                options.Password.RequireDigit = true;      
-                options.Password.RequireLowercase = true;  
-                options.Password.RequireUppercase = true;  
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequiredLength = 6;
             })
+              //.AddRoles<IdentityUser>()
                .AddEntityFrameworkStores<ApplicationDbContext>();
-
             return services;
         }
     }
