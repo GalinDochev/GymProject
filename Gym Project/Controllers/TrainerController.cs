@@ -70,6 +70,7 @@ namespace Gym_Project.Controllers
             return View(trainer);
         }
         [Authorize(Roles ="Admin")]
+        [ValidateAntiForgeryToken]
         [HttpGet]
         public async Task<IActionResult> AddTrainer()
         {
@@ -112,6 +113,7 @@ namespace Gym_Project.Controllers
             return RedirectToAction(nameof(Index));
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpGet]
         public async Task <IActionResult> EditTrainer (int Id)
         {
@@ -130,6 +132,7 @@ namespace Gym_Project.Controllers
             return View(trainer);
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> EditTrainer(AddTrainerViewModel trainerViewModel, int Id)
         {
@@ -153,6 +156,7 @@ namespace Gym_Project.Controllers
             return RedirectToAction(nameof(Index));
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTrainer (int Id)
         {
             await _trainerService.DeleteTrainer(Id);

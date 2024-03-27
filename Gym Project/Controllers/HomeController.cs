@@ -27,14 +27,14 @@ namespace Gym_Project.Controllers
             return View();
         }
         [HttpGet]
-        public  IActionResult SendEmail()
+        public  IActionResult ContactUs()
         {
             var model = new EmailViewModel();
             return  View(model);
         }
 
         [HttpPost]
-        public IActionResult SendEmail(EmailViewModel model)
+        public IActionResult ContactUs(EmailViewModel model)
         {
             using (var smtpClient = new SmtpClient())
             {
@@ -46,7 +46,7 @@ namespace Gym_Project.Controllers
                 var password = _configuration["GmailCredentials:Password"];
                 MailMessage mm = new MailMessage(username, model.EmailAddress);
                 mm.Subject = model.Subject;
-                mm.Body = $"{model.Message}{Environment.NewLine}{Environment.NewLine}Message from:{emailFrom}";
+                mm.Body = $"{model.Message}{Environment.NewLine}{Environment.NewLine}Message is from: {emailFrom}";
                 mm.IsBodyHtml = false;
                 smtpClient.Credentials = new NetworkCredential(username, password);
 
@@ -54,9 +54,13 @@ namespace Gym_Project.Controllers
                 ViewBag.Message = "Message sent";
             }
 
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpGet]
+        public IActionResult Contacts()
+        {
             return View();
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

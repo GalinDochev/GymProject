@@ -25,6 +25,7 @@ namespace Gym_Project.Controllers
 
         }
         [AllowAnonymous]
+
         public async Task<IActionResult> Index(
             string searchString,
             string category,
@@ -91,7 +92,6 @@ namespace Gym_Project.Controllers
             return View(workout);
         }
 
-        
         public async Task<IActionResult> JoinWorkout(int Id)
         {
             var userId = GetUserId();
@@ -126,6 +126,7 @@ namespace Gym_Project.Controllers
             return View(workout);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddWorkout(AddWorkoutViewModel workoutViewModel)
         {
             if (!ModelState.IsValid)
@@ -153,7 +154,6 @@ namespace Gym_Project.Controllers
             await _workoutService.AddWorkout(workoutDTO);
             return RedirectToAction(nameof(Index));
         }
-
         [HttpGet]
         public async Task<IActionResult> EditWorkout(int Id)
         {
@@ -177,8 +177,8 @@ namespace Gym_Project.Controllers
             };
             return View(workoutViewModel);
         }
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditWorkout(AddWorkoutViewModel workoutViewModel, int Id)
         {
             if (!ModelState.IsValid)
@@ -207,6 +207,7 @@ namespace Gym_Project.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteWorkout(int Id)
         {
             var userId = GetUserId();

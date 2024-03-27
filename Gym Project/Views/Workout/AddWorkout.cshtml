@@ -9,6 +9,7 @@
 <div class="container">
     <h1>@ViewData["Title"]</h1>
     <form method="post" asp-controller="Workout" asp-action="AddWorkout">
+    @Html.AntiForgeryToken()  
         <div class="form-group">
             <label for="Name">Name:</label>
             <input type="text" class="form-control" id="Name" asp-for="Name" required>

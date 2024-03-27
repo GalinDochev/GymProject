@@ -1,4 +1,62 @@
-﻿<div class="container mt-5">
+﻿<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFqXwxkBpUn973yODgw4fzGHlyW8blfio&callback=console.debug&libraries=maps,marker&v=beta">
+</script>
+<style>
+    body {
+        color: white; /* Set text color to white */
+        background-color: black; /* Set background color to black */
+        position: relative; /* Set body position to relative */
+    }
+
+    h1, h2 {
+        text-align: center;
+        color: white; /* Set heading text color to white */
+    }
+
+    .list-group-item {
+        background-color: rgba(50, 50, 50, 1); /* Dark gray background color */
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        color: white; /* Set list item text color to white */
+        padding: 10px; /* Add padding for better visibility */
+        font-size: 20px; /* Increase font size */
+    }
+
+        .list-group-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .list-group-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+        }
+
+    .map-container {
+        width: 100%;
+        height: 80%;
+        margin-top: 30px;
+        border-radius: 10px;
+        overflow: hidden; /* Hide overflow to prevent map overflow */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    }
+
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://www.hussle.com/blog/wp-content/uploads/2020/12/Gym-structure-1080x675.png');
+        /* Adjust background image properties */
+        background-size: cover; /* Cover the entire background */
+        background-repeat: no-repeat; /* Do not repeat the background image */
+        /* You can also set other background properties like position, attachment, etc. */
+        filter: brightness(60%); /* Make the background image darker */
+        z-index: -1; /* Ensure it stays behind other content */
+    }
+</style>
+<div class="container mt-5 id="bg-container">
     <h1 class="text-center mb-5">About Us</h1>
 
     <div class="row justify-content-center">
@@ -41,6 +99,19 @@
                 <li class="list-group-item">Pre-Workout Supplements - $29.99</li>
                 <li class="list-group-item">Fitness Apparel - Prices Vary</li>
             </ul>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <!-- Full width on medium and larger screens -->
+            <h2 class="text-center">Our Location</h2>
+            <div style="width: 100%; height: 300px;">
+                <!-- Full width -->
+                <gmp-map center="43.71224594116211,26.83108139038086" zoom="14" map-id="DEMO_MAP_ID">
+                    <gmp-advanced-marker position="43.71224594116211,26.83108139038086" title="My location"></gmp-advanced-marker>
+                </gmp-map>
+            </div>
         </div>
     </div>
 </div>
