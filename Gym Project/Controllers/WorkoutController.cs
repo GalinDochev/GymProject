@@ -4,6 +4,7 @@ using Gym_Project.Models.WorkoutsModels;
 using GymProject.Common.Constants;
 using GymProject.Core.DTOs.ExerciseDTOs;
 using GymProject.Core.DTOs.WorkoutDTOs;
+using GymProject.Core.Exceptions;
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -17,12 +18,13 @@ namespace Gym_Project.Controllers
     {
         private WorkoutService _workoutService;
         private ExerciseService _exerciseService;
+        private ILogger _logger;
 
-        public WorkoutController(WorkoutService workoutService, ExerciseService exerciseService)
+        public WorkoutController(WorkoutService workoutService, ExerciseService exerciseService, ILogger<WorkoutController> logger)
         {
             _workoutService = workoutService;
             _exerciseService = exerciseService;
-
+            _logger = logger;
         }
         [AllowAnonymous]
 
@@ -75,8 +77,10 @@ namespace Gym_Project.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int Id)
         {
-
+            try
+            {
             var workoutDTO = await _workoutService.GetWorkoutByIdForDetails(Id);
+
             var workout = new WorkoutDetailsViewModel
             {
                 Id = workoutDTO.Id,
@@ -90,6 +94,11 @@ namespace Gym_Project.Controllers
                 CreatorId = workoutDTO.CreatorId,
             };
             return View(workout);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound();
+            }
         }
 
         public async Task<IActionResult> JoinWorkout(int Id)
@@ -157,25 +166,28 @@ namespace Gym_Project.Controllers
         [HttpGet]
         public async Task<IActionResult> EditWorkout(int Id)
         {
-            var workoutDTO = await _workoutService.GetWorkoutByIdForEdit(Id);
-            var userId = GetUserId();
-            if (userId!=workoutDTO.CreatorId)
-            {
-                throw new InvalidOperationException("You cant edit a workout that you havent created");
-            }
-            var workoutViewModel = new AddWorkoutViewModel
-            {
-                Name = workoutDTO.Name,
-                Id = workoutDTO.Id,
-                Duration = workoutDTO.Duration,
-                CreatorId = workoutDTO.CreatorId,
-                Description = workoutDTO.Description,
-                DifficultyLevel = workoutDTO.DifficultyLevel,
-                ImageUrl = workoutDTO.ImageUrl,
-                SelectedExercises = workoutDTO.SelectedExercises.Select(m => m.Name).ToList(),
-                SelectedCategories = workoutDTO.SelectedCategories.Select(m => m.Name).ToList()
-            };
-            return View(workoutViewModel);
+
+                var workoutDTO = await _workoutService.GetWorkoutByIdForEdit(Id);
+                var userId = GetUserId();
+                if (userId!=workoutDTO.CreatorId)
+                {
+                    throw new UnAuthorizedActionException("You can't edit a workout that you haven't created");
+                }
+
+                var workoutViewModel = new AddWorkoutViewModel
+                {
+                    Name = workoutDTO.Name,
+                    Id = workoutDTO.Id,
+                    Duration = workoutDTO.Duration,
+                    CreatorId = workoutDTO.CreatorId,
+                    Description = workoutDTO.Description,
+                    DifficultyLevel = workoutDTO.DifficultyLevel,
+                    ImageUrl = workoutDTO.ImageUrl,
+                    SelectedExercises = workoutDTO.SelectedExercises.Select(m => m.Name).ToList(),
+                    SelectedCategories = workoutDTO.SelectedCategories.Select(m => m.Name).ToList()
+                };
+
+                return View(workoutViewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

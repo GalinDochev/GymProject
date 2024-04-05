@@ -54,23 +54,30 @@ namespace GymProject.Core.Services
 
         public async Task<WorkoutDetailsDTO> GetWorkoutByIdForDetails(int Id)
         {
-            var workout = await workoutRepository.GetById(Id);
-
-            var workoutDTO = new WorkoutDetailsDTO
+            try
             {
-                Name = workout.Name,
-                Id = workout.Id,
-                Description = workout.Description,
-                DifficultyLevel = workout.DifficultyLevel,
-                ImageUrl = workout.ImageUrl,
-                Creator = workout.Creator,
-                Category = workout.Category,
-                CreatorId = workout.CreatorId,
-                CategoryId = workout.CategoryId,
-                Duration = workout.Duration,
-                ExerciseWorkouts = workout.ExerciseWorkouts.Where(ew=>ew.IsDeleted==false).ToList(),
-            };
-            return workoutDTO;
+                var workout = await workoutRepository.GetById(Id);
+
+                var workoutDTO = new WorkoutDetailsDTO
+                {
+                    Name = workout.Name,
+                    Id = workout.Id,
+                    Description = workout.Description,
+                    DifficultyLevel = workout.DifficultyLevel,
+                    ImageUrl = workout.ImageUrl,
+                    Creator = workout.Creator,
+                    Category = workout.Category,
+                    CreatorId = workout.CreatorId,
+                    CategoryId = workout.CategoryId,
+                    Duration = workout.Duration,
+                    ExerciseWorkouts = workout.ExerciseWorkouts.Where(ew => ew.IsDeleted == false).ToList(),
+                };
+                return workoutDTO;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public async Task JoinWorkout(int Id, string userId)

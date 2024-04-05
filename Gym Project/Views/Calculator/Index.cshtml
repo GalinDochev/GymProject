@@ -1,0 +1,67 @@
+﻿@using Gym_Project.Models.CalculatorModels;
+@model BMRInputModel
+@{
+    ViewData["Title"] = "BMR Calculator";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/CalculatorStyle.css" />
+</head>
+
+<form asp-controller="Calculator" asp-action="Calculate" method="post">
+    <div id="bmr-calculator" class="wrapper">
+        <div class="calculator">
+            <div class="choose-gender">
+                <div class="segmented-control">
+                    <input asp-for="Gender" type="radio" id="calc-gender-male" value="male" checked />
+                    <label for="calc-gender-male">Male</label>
+                </div>
+                <div class="segmented-control">
+                    <input asp-for="Gender" type="radio" id="calc-gender-female" value="female" />
+                    <label for="calc-gender-female">Female</label>
+                </div>
+            </div>
+            <label asp-for="Age" id="calc-age_value">Age: @Model.Age</label>
+            <input asp-for="Age" id="calc-age" type="range" min="13" max="100" />
+            <label asp-for="Height" id="calc-height_value">Height: @Model.Height cm</label>
+            <input asp-for="Height" id="calc-height" type="range" min="80" max="250" />
+            <label asp-for="Weight" id="calc-weight_value">Weight: @Model.Weight kg</label>
+            <input asp-for="Weight" id="calc-weight" type="range" min="40" max="200" />
+            <label asp-for="Walking" id="calc-walking_value">Walking: @Model.Walking hours per week</label>
+            <input asp-for="Walking" id="calc-walking" type="range" min="0" max="50" />
+            <label asp-for="Cardio" id="calc-cardio_value">Cardio: @Model.Cardio hours per week</label>
+            <input asp-for="Cardio" id="calc-cardio" type="range" min="0" max="50" />
+        </div>
+        <div class="results">
+            <div id="calc-target-gain">
+                To Gain Weight:<br />
+                <span>@Model.TargetGainWeight calories</span>
+            </div>
+            <div id="calc-target-maintain">
+                To Maintain:<br />
+                <span>@Model.TargetMaintain calories</span>
+            </div>
+            <div id="calc-target-lose">
+                To Lose Weight:<br />
+                <span>@Model.TargetLoseWeight calories</span>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="calculator-button mt-3">Calculate</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(".calculator input[type='range']").on("input", function () {
+            var parameterName = $(this).attr("id").split("calc-")[1];
+            var value = $(this).val();
+            $("#calc-" + parameterName + "_value").text(parameterName.charAt(0).toUpperCase() + parameterName.slice(1) + ": " + value);
+        });
+    </script>
+}
