@@ -3,6 +3,7 @@ using GymProject.Infrastructure.Data.Models;
 using GymProject.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
@@ -13,16 +14,17 @@ builder.Services.AddApplicationIdentity(builder.Configuration);
 builder.Services.AddScoped<Repository<Trainer>, TrainersRepository>();
 builder.Services.AddScoped<Repository<Exercise>, ExerciseRepository>();
 builder.Services.AddScoped<Repository<ExerciseMuscleGroup>, ExerciseMuscleGroupRepository>();
-builder.Services.AddScoped<Repository<MuscleGroup>,MuscleGroupRepository>();
-builder.Services.AddScoped<Repository<Workout>,WorkoutRepository>();
-builder.Services.AddScoped<Repository<UserWorkout>,UserWorkoutRepository>();
-builder.Services.AddScoped<Repository<Category>,CategoryRepository>();
-builder.Services.AddScoped<Repository<ExerciseWorkout>,ExerciseWorkoutRepository>();
+builder.Services.AddScoped<Repository<MuscleGroup>, MuscleGroupRepository>();
+builder.Services.AddScoped<Repository<Workout>, WorkoutRepository>();
+builder.Services.AddScoped<Repository<UserWorkout>, UserWorkoutRepository>();
+builder.Services.AddScoped<Repository<Category>, CategoryRepository>();
+builder.Services.AddScoped<Repository<ExerciseWorkout>, ExerciseWorkoutRepository>();
 builder.Services.AddScoped<TrainersService>();
 builder.Services.AddScoped<ExerciseService>();
 builder.Services.AddScoped<WorkoutService>();
-builder.Services.AddControllersWithViews();
-
+builder.Services.AddControllersWithViews(options =>
+options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
+builder.Services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
 builder.Services.AddApplicationServices();
 var app = builder.Build();
 
@@ -46,10 +48,25 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+app.UseEndpoints(endPoints =>
+    {
+        app.MapDefaultControllerRoute();
+        app.MapRazorPages();
+    }
+    );
+app.UseStatusCodePages(context =>
+{
+    var statusCode = context.HttpContext.Response.StatusCode;
+    if (statusCode == StatusCodes.Status404NotFound)
+    {
+        context.HttpContext.Response.Redirect($"/Error/NotFound");
+    }
+    else if (statusCode == StatusCodes.Status500InternalServerError)
+    {
+        context.HttpContext.Response.Redirect($"/Error/InternalError");
+    }
+    return Task.CompletedTask;
+});
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -68,13 +85,13 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     string email = "galindochev953@gmail.com";
     var password = "galindochev953Pass";
-    if (await userManager.FindByEmailAsync(email)==null)
+    if (await userManager.FindByEmailAsync(email) == null)
     {
         var user = new IdentityUser();
         user.UserName = email;
         user.Email = email;
         await userManager.CreateAsync(user, password);
-        await userManager.AddToRoleAsync(user,"Admin");
+        await userManager.AddToRoleAsync(user, "Admin");
     }
 }
 app.Run();

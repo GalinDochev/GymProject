@@ -26,5 +26,27 @@ namespace GymProject.Common.Constants
         public const int MaxWalking = 50;
         public const int MinCardio = 0;
         public const int MaxCardio = 50;
+
+        public const double WeightMultiplier = 10;
+        public const double HeightMultiplier = 6.25;
+        public const double AgeMultiplier = 5;
+
+        public const double MaleGenderAdjustment = 5;
+        public const double FemaleGenderAdjustment = -161;
+        public const string MaleGender = "male";
+        public const string FemaleGender = "female";
+
+        public const double ActivityLevelMultiplier = 1.2;
+
+        public const double WalkingCoefficient = 0.03;
+        public const double CardioCoefficient = 0.07;
+
+        
+        public const double MinutesPerWeek = 60;
+        public const double KilogramsToPounds = 1 / 0.45;
+        public const int CaloriesPerPound = 100;
+        public const int WeightGainCalories = 300;
+        public const int WeightLossCalories = 500;
+        public const int DaysInWeek = 7;
     }
 }

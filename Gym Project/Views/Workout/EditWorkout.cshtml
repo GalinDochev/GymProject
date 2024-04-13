@@ -66,4 +66,14 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            var showException = '@(TempData["ShowException"] ?? "")';
+            var errorMessage = '@(TempData["ExceptionMessage"] ?? "")';
+            if (showException === "True" && errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    </script>
+
 }

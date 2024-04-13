@@ -12,10 +12,12 @@ namespace Gym_Project.Controllers
     {
         private TrainersService _trainerService;
         private ExerciseService _exerciseService;
-        public TrainerController(TrainersService trainerService, ExerciseService exerciseService)
+        private ILogger<TrainerController> _logger;
+        public TrainerController(TrainersService trainerService, ExerciseService exerciseService,ILogger<TrainerController> logger)
         {
             _trainerService = trainerService;
             _exerciseService = exerciseService;
+            _logger = logger;
         }
         [AllowAnonymous]
         public async Task<IActionResult> Index(
@@ -23,113 +25,165 @@ namespace Gym_Project.Controllers
             int pageNumber = PaginationConstants.PageNumber, 
             int pageSize = PaginationConstants.PageSize)
         {
-            var trainersDTO = await _trainerService.GetAllNotDeletedTrainers();
-
-            if (!string.IsNullOrEmpty(searchString))
+            try
             {
-                var lowerCaseSearchString = searchString.ToLower();
-                trainersDTO = trainersDTO.Where(t => t.FullName.ToLower().Contains(lowerCaseSearchString)).ToList();
-            }
+                var trainersDTO = await _trainerService.GetAllNotDeletedTrainers();
 
-            var totalRecords = trainersDTO.Count;
-            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
-            var trainers = trainersDTO
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(t => new AllTrainersViewModel
+                if (!string.IsNullOrEmpty(searchString))
                 {
-                    FullName = t.FullName,
-                    Age = t.Age,
-                    Id = t.Id,
-                    ImageUrl = t.ImageUrl,
-                    Slogan = t.Slogan
-                }).ToList();
+                    var lowerCaseSearchString = searchString.ToLower();
+                    trainersDTO = trainersDTO.Where(t => t.FullName.ToLower().Contains(lowerCaseSearchString)).ToList();
+                }
 
-            ViewBag.SearchString = searchString ?? string.Empty;
-            ViewBag.TotalPages = totalPages;
-            ViewBag.CurrentPage = pageNumber;
+                var totalRecords = trainersDTO.Count;
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
 
-            return View(trainers);
+                var trainers = trainersDTO
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(t => new AllTrainersViewModel
+                    {
+                        FullName = t.FullName,
+                        Age = t.Age,
+                        Id = t.Id,
+                        ImageUrl = t.ImageUrl,
+                        Slogan = t.Slogan
+                    }).ToList();
+
+                ViewBag.SearchString = searchString ?? string.Empty;
+                ViewBag.TotalPages = totalPages;
+                ViewBag.CurrentPage = pageNumber;
+
+                return View(trainers);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "There has been an error in Index/TrainerController ");
+                return StatusCode(500);
+            }
         }
 
         [AllowAnonymous]
         public async Task<IActionResult> ViewProfile(int Id)
         {
-            var trainerDTO = await _trainerService.GetTrainerByIdForProfile(Id);
-            var trainer = new TrainerProfileViewModel
+            try
             {
-                FullName = trainerDTO.FullName,
-                Age = trainerDTO.Age,
-                Id = trainerDTO.Id,
-                Slogan = trainerDTO.Slogan,
-                Education = trainerDTO.Education,
-                FavouriteExercise = trainerDTO.FavouriteExercise,
-                ImageUrl = trainerDTO.ImageUrl,
-            };
-            return View(trainer);
+                var trainerDTO = await _trainerService.GetTrainerByIdForProfile(Id);
+                var trainer = new TrainerProfileViewModel
+                {
+                    FullName = trainerDTO.FullName,
+                    Age = trainerDTO.Age,
+                    Id = trainerDTO.Id,
+                    Slogan = trainerDTO.Slogan,
+                    Education = trainerDTO.Education,
+                    FavouriteExercise = trainerDTO.FavouriteExercise,
+                    ImageUrl = trainerDTO.ImageUrl,
+                };
+                return View(trainer);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "There has been an error in Details/TrainerController ");
+                return StatusCode(500);
+            }
         }
         [Authorize(Roles ="Admin")]
-        [ValidateAntiForgeryToken]
         [HttpGet]
         public async Task<IActionResult> AddTrainer()
         {
-            var trainerDTO = await _trainerService.GetTrainerView();
-            var trainer = new AddTrainerViewModel
+            try
             {
-                FullName = trainerDTO.FullName,
-                Age = trainerDTO.Age,
-                Id = trainerDTO.Id,
-                Slogan = trainerDTO.Slogan,
-                Education = trainerDTO.Education,
-                ImageUrl = trainerDTO.ImageUrl,
-                ExerciseId = trainerDTO.ExerciseId,
-                Exercises = trainerDTO.Exercises
-            };
-            return View(trainer);
+
+                var trainerDTO = await _trainerService.GetTrainerDTOModel();
+                var trainer = new AddTrainerViewModel
+                {
+                    FullName = trainerDTO.FullName,
+                    Age = trainerDTO.Age,
+                    Id = trainerDTO.Id,
+                    Slogan = trainerDTO.Slogan,
+                    Education = trainerDTO.Education,
+                    ImageUrl = trainerDTO.ImageUrl,
+                    ExerciseId = trainerDTO.ExerciseId,
+                    Exercises = trainerDTO.Exercises
+                };
+                return View(trainer);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in AddExercise/TrainerController while getting the trainer view model.");
+                return StatusCode(500);
+                throw;
+            }
         }
         [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> AddTrainer(AddTrainerViewModel trainer)
         {
             if (!ModelState.IsValid)
             {
-                trainer.Exercises = await _exerciseService.GetAllNotDeletedExForTrainers();
-
-                return View(trainer);
+                try
+                {
+                    trainer.Exercises = await _exerciseService.GetAllNotDeletedExForTrainers();
+                    return View(trainer);
+                }
+                catch (Exception ex)
+                {
+                    TempData["ShowException"] = true;
+                    TempData["ExceptionMessage"] = "An error occurred while adding the trainer.";
+                    return RedirectToAction(nameof(AddTrainer));
+                }
             }
-            var trainerDTO = new AddTrainerDTO
+            try
             {
-                Id = trainer.Id,
-                Age = trainer.Age,
-                Education = trainer.Education,
-                ExerciseId = trainer.ExerciseId,
-                FullName = trainer.FullName,
-                ImageUrl = trainer.ImageUrl,
-                Slogan = trainer.Slogan
-            };
+                var trainerDTO = new AddTrainerDTO
+                {
+                    Id = trainer.Id,
+                    Age = trainer.Age,
+                    Education = trainer.Education,
+                    ExerciseId = trainer.ExerciseId,
+                    FullName = trainer.FullName,
+                    ImageUrl = trainer.ImageUrl,
+                    Slogan = trainer.Slogan
+                };
 
-            await _trainerService.AddTrainer(trainerDTO);
-            return RedirectToAction(nameof(Index));
+                await _trainerService.AddTrainer(trainerDTO);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There has been an error in AddTrainer/TrainerController ");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.AddTrainerErrorMessage}";
+                return RedirectToAction(nameof(Index));
+            }
         }
         [Authorize(Roles = "Admin")]
-        [ValidateAntiForgeryToken]
         [HttpGet]
         public async Task <IActionResult> EditTrainer (int Id)
         {
-            var trainerDTO=await _trainerService.GetTrainerByIdForEdit(Id);
-            var trainer = new AddTrainerViewModel
+            try
             {
-                FullName = trainerDTO.FullName,
-                Age = trainerDTO.Age,
-                Id = trainerDTO.Id,
-                Slogan = trainerDTO.Slogan,
-                Education = trainerDTO.Education,
-                ImageUrl = trainerDTO.ImageUrl,
-                ExerciseId = trainerDTO.ExerciseId,
-                Exercises = trainerDTO.Exercises
-            };
-            return View(trainer);
+                var trainerDTO = await _trainerService.GetTrainerByIdForEdit(Id);
+                var trainer = new AddTrainerViewModel
+                {
+                    FullName = trainerDTO.FullName,
+                    Age = trainerDTO.Age,
+                    Id = trainerDTO.Id,
+                    Slogan = trainerDTO.Slogan,
+                    Education = trainerDTO.Education,
+                    ImageUrl = trainerDTO.ImageUrl,
+                    ExerciseId = trainerDTO.ExerciseId,
+                    Exercises = trainerDTO.Exercises
+                };
+                return View(trainer);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in EditTrainer/TrainerController while getting the trainer view model.");
+                return StatusCode(500);
+                throw;
+            }
         }
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
@@ -138,29 +192,58 @@ namespace Gym_Project.Controllers
         {
             if (!ModelState.IsValid)
             {
+                try
+                {
                 trainerViewModel.Exercises = await _exerciseService.GetAllNotDeletedExForTrainers();
 
                 return View(trainerViewModel);
+                }
+                catch (Exception ex)
+                {
+                    TempData["ShowException"] = true;
+                    TempData["ExceptionMessage"] = $"{CustomExceptionMessages.EditTrainerErrorMessage}";
+                    return RedirectToAction(nameof(EditTrainer));
+                }
             }
-            var trainerDTO = new AddTrainerDTO
+            try
             {
-                Id = trainerViewModel.Id,
-                Age = trainerViewModel.Age,
-                Education = trainerViewModel.Education,
-                ExerciseId = trainerViewModel.ExerciseId,
-                FullName = trainerViewModel.FullName,
-                ImageUrl = trainerViewModel.ImageUrl,
-                Slogan = trainerViewModel.Slogan
-            };
-            await _trainerService.EditTrainer(trainerDTO);
-            return RedirectToAction(nameof(Index));
+                var trainerDTO = new AddTrainerDTO
+                {
+                    Id = trainerViewModel.Id,
+                    Age = trainerViewModel.Age,
+                    Education = trainerViewModel.Education,
+                    ExerciseId = trainerViewModel.ExerciseId,
+                    FullName = trainerViewModel.FullName,
+                    ImageUrl = trainerViewModel.ImageUrl,
+                    Slogan = trainerViewModel.Slogan
+                };
+                await _trainerService.EditTrainer(trainerDTO);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in EditTrainer/TrainerControllre");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.EditTrainerErrorMessage}"; ;
+                return RedirectToAction(nameof(EditTrainer));
+            }
         }
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTrainer (int Id)
         {
-            await _trainerService.DeleteTrainer(Id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _trainerService.DeleteTrainer(Id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in DeleteTrainer/TrainerControllre");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.DeleteTrainerErrorMessage}"; ;
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -21,19 +21,33 @@ namespace GymProject.Infrastructure.Data.Repositories
 
         public override async Task<IEnumerable<Workout>> GetAllNotDeleted()
         {
-            var workouts = await context.Workouts
-                .Where(w => w.IsDeleted == false)
-                .Include(w => w.Category)
-                .Include(uw => uw.UsersWorkouts)
-                    .ThenInclude(uw => uw.User)
-                 .Include(w=>w.ExerciseWorkouts)
-                    .ThenInclude(ew=>ew.Exercise)
-                .Where
-                (w => !w.UsersWorkouts.All(emg => emg.IsDeleted == true) 
-                && !w.ExerciseWorkouts.All(emg=>emg.IsDeleted==true))
-                .ToListAsync();
+            try
+            {
+                var workouts = await context.Workouts
+                    .Where(w => w.IsDeleted == false)
+                    .Include(w => w.Category)
+                    .Include(uw => uw.UsersWorkouts)
+                        .ThenInclude(uw => uw.User)
+                    .Include(w => w.ExerciseWorkouts)
+                        .ThenInclude(ew => ew.Exercise)
+                    .Where(w => !w.UsersWorkouts.All(emg => emg.IsDeleted == true)
+                             && !w.ExerciseWorkouts.All(emg => emg.IsDeleted == true))
+                    .ToListAsync();
 
-            return workouts;
+                return workouts;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "An error occurred due to an invalid operation.");
+
+                throw new Exception("Invalid operation error occurred.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+
+                throw;
+            }
         }
         public override async Task<Workout> GetById(int id)
         {

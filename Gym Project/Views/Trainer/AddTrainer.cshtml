@@ -8,6 +8,7 @@
 <div class="container mt-5">
     <h2>Add Trainer</h2>
     <form asp-action="AddTrainer" method="post">
+        @Html.AntiForgeryToken()
         <div class="form-group">
             <label asp-for="@Model.FullName" class="form-label-add-edit">Full Name:</label>
             <input asp-for="@Model.FullName" class="form-control" aria-required="true" placeholder="Trainer's full name" />
@@ -46,4 +47,16 @@
         </div>
         <button type="submit" class="btn btn-primary">Add Trainer</button>
     </form>
+
 </div>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var showException = '@(TempData["ShowException"] ?? "")';
+            var errorMessage = '@(TempData["ExceptionMessage"] ?? "")';
+            if (showException === "True" && errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    </script>
+}

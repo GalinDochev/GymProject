@@ -47,3 +47,15 @@
         <button type="submit" class="btn btn-primary">Edit Trainer</button>
     </form>
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var showException = '@(TempData["ShowException"] ?? "")';
+            var errorMessage = '@(TempData["ExceptionMessage"] ?? "")';
+            if (showException === "True" && errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    </script>
+}

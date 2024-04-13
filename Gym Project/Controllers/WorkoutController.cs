@@ -7,6 +7,7 @@ using GymProject.Core.DTOs.WorkoutDTOs;
 using GymProject.Core.Exceptions;
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
+using GymProject.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -35,43 +36,51 @@ namespace Gym_Project.Controllers
             int pageNumber = PaginationConstants.PageNumber,
             int pageSize = PaginationConstants.PageSize)
         {
-            var userId = GetUserId();
-            var workoutsDTOs = await _workoutService.GetAllNotDeletedWorkouts();
-
-            workoutsDTOs = _workoutService.ApplySearchFilter(workoutsDTOs, searchString);
-
-            workoutsDTOs = _workoutService.ApplyCategoryFilter(workoutsDTOs, category);
-
-            workoutsDTOs = _workoutService.ApplyDifficultyLevelFilter(workoutsDTOs, difficultyLevelGroup);
-
-            var categoryNames = await _workoutService.GetCategoriesNames();
-            ViewBag.Categories = categoryNames;
-
-
-            var totalRecords = workoutsDTOs.Count;
-            var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-
-            var workouts = workoutsDTOs
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(e => new AllWorkoutsViewModel
+            try
             {
-                Id = e.Id,
-                Name = e.Name,
-                DifficultyLevel = e.DifficultyLevel,
-                ImageUrl = e.ImageUrl,
-                Category = e.Category.Name,
-                Duration = e.Duration,
-                CreatorId = e.Creator.Id,
-                CreatorName = e.Creator.UserName,
-                IsJoined = e.UserWorkouts.Any(uw => uw.UserId == userId &&
-                                                     uw.UserId != e.Creator.Id &&
-                                                     !uw.IsDeleted)
-            }).ToList();
-            ViewBag.SearchString = searchString ?? string.Empty;
-            ViewBag.PageNumber = pageNumber;
-            ViewBag.TotalPages = totalPages;
-            return View(workouts);
+                var userId = GetUserId();
+                var workoutsDTOs = await _workoutService.GetAllNotDeletedWorkouts();
+
+                workoutsDTOs = _workoutService.ApplySearchFilter(workoutsDTOs, searchString);
+
+                workoutsDTOs = _workoutService.ApplyCategoryFilter(workoutsDTOs, category);
+
+                workoutsDTOs = _workoutService.ApplyDifficultyLevelFilter(workoutsDTOs, difficultyLevelGroup);
+
+                var categoryNames = await _workoutService.GetCategoriesNames();
+                ViewBag.Categories = categoryNames;
+
+
+                var totalRecords = workoutsDTOs.Count;
+                var totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+                var workouts = workoutsDTOs
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(e => new AllWorkoutsViewModel
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        DifficultyLevel = e.DifficultyLevel,
+                        ImageUrl = e.ImageUrl,
+                        Category = e.Category.Name,
+                        Duration = e.Duration,
+                        CreatorId = e.Creator.Id,
+                        CreatorName = e.Creator.UserName,
+                        IsJoined = e.UserWorkouts.Any(uw => uw.UserId == userId &&
+                                                         uw.UserId != e.Creator.Id &&
+                                                         !uw.IsDeleted)
+                    }).ToList();
+                ViewBag.SearchString = searchString ?? string.Empty;
+                ViewBag.PageNumber = pageNumber;
+                ViewBag.TotalPages = totalPages;
+                return View(workouts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There has been an error in Index/WorkoutController ");
+                return StatusCode(500);
+            }
         }
 
         [AllowAnonymous]
@@ -79,60 +88,90 @@ namespace Gym_Project.Controllers
         {
             try
             {
-            var workoutDTO = await _workoutService.GetWorkoutByIdForDetails(Id);
+                var workoutDTO = await _workoutService.GetWorkoutByIdForDetails(Id);
 
-            var workout = new WorkoutDetailsViewModel
-            {
-                Id = workoutDTO.Id,
-                Name = workoutDTO.Name,
-                DifficultyLevel = workoutDTO.DifficultyLevel,
-                ImageUrl = workoutDTO.ImageUrl,
-                Description = workoutDTO.Description,
-                CategoryName = workoutDTO.Category.Name,
-                Duration = workoutDTO.Duration,
-                ExerciseWorkouts = workoutDTO.ExerciseWorkouts,
-                CreatorId = workoutDTO.CreatorId,
-            };
-            return View(workout);
+                var workout = new WorkoutDetailsViewModel
+                {
+                    Id = workoutDTO.Id,
+                    Name = workoutDTO.Name,
+                    DifficultyLevel = workoutDTO.DifficultyLevel,
+                    ImageUrl = workoutDTO.ImageUrl,
+                    Description = workoutDTO.Description,
+                    CategoryName = workoutDTO.Category.Name,
+                    Duration = workoutDTO.Duration,
+                    ExerciseWorkouts = workoutDTO.ExerciseWorkouts,
+                    CreatorId = workoutDTO.CreatorId,
+                };
+                return View(workout);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
-                return NotFound();
+                _logger.LogError(ex, "There has been an error in Details/WorkoutController ");
+                return StatusCode(500);
             }
         }
 
         public async Task<IActionResult> JoinWorkout(int Id)
         {
-            var userId = GetUserId();
-            await _workoutService.JoinWorkout(Id, GetUserId());
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var userId = GetUserId();
+                await _workoutService.JoinWorkout(Id, GetUserId());
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in JoinWorkout/WorkoutController");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.JoinWorkoutErrorMessage}"; ;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         public async Task<IActionResult> LeaveWorkout(int Id)
         {
-            var userId = GetUserId();
+            try
+            {
+                var userId = GetUserId();
 
-            await _workoutService.RemoveWorkoutFromCollectionAsync(Id, userId);
+                await _workoutService.RemoveWorkoutFromCollectionAsync(Id, userId);
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in LeaveWorkout/WorkoutController");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.LeaveWorkoutErrorMessage}"; ;
+                return RedirectToAction(nameof(Index));
+            }
         }
         [HttpGet]
         public async Task<IActionResult> AddWorkout()
         {
-            var workoutDTO = await _workoutService.GetWorkoutDTOModel();
-            var workout = new AddWorkoutViewModel
+            try
             {
-                Id = workoutDTO.Id,
-                Name = workoutDTO.Name,
-                DifficultyLevel = workoutDTO.DifficultyLevel,
-                ImageUrl = workoutDTO.ImageUrl,
-                Description = workoutDTO.Description,
-                Duration = workoutDTO.Duration,
-                CreatorId = workoutDTO.CreatorId,
-                SelectedCategories = workoutDTO.SelectedCategories.Select(m => m.Name).ToList(),
-                SelectedExercises = workoutDTO.SelectedExercises.Select(m => m.Name).ToList()
-            };
-            return View(workout);
+                var workoutDTO = await _workoutService.GetWorkoutDTOModel();
+                var workout = new AddWorkoutViewModel
+                {
+                    Id = workoutDTO.Id,
+                    Name = workoutDTO.Name,
+                    DifficultyLevel = workoutDTO.DifficultyLevel,
+                    ImageUrl = workoutDTO.ImageUrl,
+                    Description = workoutDTO.Description,
+                    Duration = workoutDTO.Duration,
+                    CreatorId = workoutDTO.CreatorId,
+                    SelectedCategories = workoutDTO.SelectedCategories.Select(m => m.Name).ToList(),
+                    SelectedExercises = workoutDTO.SelectedExercises.Select(m => m.Name).ToList()
+                };
+                return View(workout);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in AddWorkout/WorkoutController while getting the exercise view model.");
+                return StatusCode(500);
+                throw;
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -140,36 +179,57 @@ namespace Gym_Project.Controllers
         {
             if (!ModelState.IsValid)
             {
-                workoutViewModel.SelectedExercises = await _exerciseService.GetExercisesNames();
-                workoutViewModel.SelectedCategories = await _workoutService.GetCategoriesNames();
+                try
+                {
+                    workoutViewModel.SelectedExercises = await _exerciseService.GetExercisesNames();
+                    workoutViewModel.SelectedCategories = await _workoutService.GetCategoriesNames();
 
-                return View(workoutViewModel);
+                    return View(workoutViewModel);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred in AddWorkout/WorkoutController");
+                    TempData["ShowException"] = true;
+                    TempData["ExceptionMessage"] = $"{CustomExceptionMessages.AddWorkoutErrorMessage}"; ;
+                    return RedirectToAction(nameof(AddWorkout));
+                }
             }
-            var userId = GetUserId();
-            var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
-            var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
-            var workoutDTO = new AddWorkoutDTO
+            try
             {
-                Name = workoutViewModel.Name,
-                Description = workoutViewModel.Description,
-                DifficultyLevel = workoutViewModel.DifficultyLevel,
-                ImageUrl = workoutViewModel.ImageUrl,
-                SelectedExercises = exercises,
-                Duration = workoutViewModel.Duration,
-                CreatorId = userId,
-                Category = category
-            };
+                var userId = GetUserId();
+                var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
+                var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
+                var workoutDTO = new AddWorkoutDTO
+                {
+                    Name = workoutViewModel.Name,
+                    Description = workoutViewModel.Description,
+                    DifficultyLevel = workoutViewModel.DifficultyLevel,
+                    ImageUrl = workoutViewModel.ImageUrl,
+                    SelectedExercises = exercises,
+                    Duration = workoutViewModel.Duration,
+                    CreatorId = userId,
+                    Category = category
+                };
 
-            await _workoutService.AddWorkout(workoutDTO);
-            return RedirectToAction(nameof(Index));
+                await _workoutService.AddWorkout(workoutDTO);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There has been an error in AddWorkout/WorkoutController ");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.AddWorkoutErrorMessage}";
+                return RedirectToAction(nameof(Index));
+            }
         }
         [HttpGet]
         public async Task<IActionResult> EditWorkout(int Id)
         {
-
+            try
+            {
                 var workoutDTO = await _workoutService.GetWorkoutByIdForEdit(Id);
                 var userId = GetUserId();
-                if (userId!=workoutDTO.CreatorId)
+                if (userId != workoutDTO.CreatorId)
                 {
                     throw new UnAuthorizedActionException("You can't edit a workout that you haven't created");
                 }
@@ -188,6 +248,20 @@ namespace Gym_Project.Controllers
                 };
 
                 return View(workoutViewModel);
+            }
+            catch (UnAuthorizedActionException ex)
+            {
+                _logger.LogError(ex, "An error occurred in EditWorkout/WorkoutControllre");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.UnauthorisedEditWorkoutErrorMessage}";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in EditWorkout/WorkoutController while getting the exercise view model.");
+                return StatusCode(500);
+                throw;
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -195,36 +269,75 @@ namespace Gym_Project.Controllers
         {
             if (!ModelState.IsValid)
             {
-                workoutViewModel.SelectedExercises = await _exerciseService.GetExercisesNames();
-                workoutViewModel.SelectedCategories = await _workoutService.GetCategoriesNames();
+                try
+                {
+                    workoutViewModel.SelectedExercises = await _exerciseService.GetExercisesNames();
+                    workoutViewModel.SelectedCategories = await _workoutService.GetCategoriesNames();
 
-                return View(workoutViewModel);
+                    return View(workoutViewModel);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "An error occurred in EditWorkout/WorkoutController");
+                    TempData["ShowException"] = true;
+                    TempData["ExceptionMessage"] = $"{CustomExceptionMessages.EditWorkoutErrorMessage}"; ;
+                    return RedirectToAction(nameof(EditWorkout));
+                }
             }
-            var userId = GetUserId();
-            var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
-            var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
-            var workoutDTO = new AddWorkoutDTO
+            try
             {
-                Name = workoutViewModel.Name,
-                Id=workoutViewModel.Id,
-                Description = workoutViewModel.Description,
-                DifficultyLevel = workoutViewModel.DifficultyLevel,
-                ImageUrl = workoutViewModel.ImageUrl,
-                SelectedExercises = exercises,
-                Duration = workoutViewModel.Duration,
-                CreatorId = userId,
-                Category = category
-            };
-            await _workoutService.EditWorkout(workoutDTO);
-            return RedirectToAction(nameof(Index));
+                var userId = GetUserId();
+                var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
+                var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
+                var workoutDTO = new AddWorkoutDTO
+                {
+                    Name = workoutViewModel.Name,
+                    Id = workoutViewModel.Id,
+                    Description = workoutViewModel.Description,
+                    DifficultyLevel = workoutViewModel.DifficultyLevel,
+                    ImageUrl = workoutViewModel.ImageUrl,
+                    SelectedExercises = exercises,
+                    Duration = workoutViewModel.Duration,
+                    CreatorId = userId,
+                    Category = category
+                };
+                await _workoutService.EditWorkout(workoutDTO);
+                return RedirectToAction(nameof(Index));
+            }
+
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in EditWorkout/WorkoutControllre");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.EditWorkoutErrorMessage}"; ;
+                return RedirectToAction(nameof(EditWorkout));
+            }
+
         }
 
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteWorkout(int Id)
         {
-            var userId = GetUserId();
-            await _workoutService.DeleteWorkout(Id,userId);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var userId = GetUserId();
+                var workout = await _workoutService.GetWorkoutByIdForEdit(Id);
+                await _workoutService.DeleteWorkout(Id, userId);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (UnAuthorizedActionException ex)
+            {
+                _logger.LogError(ex, "An error occurred in DeleteWorkout/WorkoutController");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.UnauthorisedDeleteWorkoutErrorMessage}";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in DeleteWorkout/WorkoutController");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.DeleteWorkoutErrorMessage}";
+                return RedirectToAction(nameof(Index));
+            }
         }
         protected string GetUserId()
         {
