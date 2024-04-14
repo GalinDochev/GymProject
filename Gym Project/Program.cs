@@ -1,7 +1,6 @@
 using GymProject.Core.Services;
 using GymProject.Infrastructure.Data.Models;
 using GymProject.Infrastructure.Data.Repositories;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 

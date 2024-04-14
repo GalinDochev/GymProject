@@ -15,10 +15,5 @@ namespace GymProject.Infrastructure.Data.Repositories
         {
             this.context = context;
         }
-
-        public async Task RevertDelete(int id)
-        {
-
-        }
     }
 }

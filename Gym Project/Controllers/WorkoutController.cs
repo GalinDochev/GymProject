@@ -117,7 +117,7 @@ namespace Gym_Project.Controllers
             {
                 var userId = GetUserId();
                 await _workoutService.JoinWorkout(Id, GetUserId());
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Identity/Account/Manage/MyWorkouts");
             }
             catch (Exception ex)
             {

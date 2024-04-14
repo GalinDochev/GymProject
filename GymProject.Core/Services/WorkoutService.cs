@@ -67,7 +67,7 @@ namespace GymProject.Core.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred in GetAllNotDeletedWorkouts method.");
-                throw; 
+                throw;
             }
         }
 
@@ -84,7 +84,7 @@ namespace GymProject.Core.Services
                     Description = workout.Description,
                     DifficultyLevel = workout.DifficultyLevel,
                     ImageUrl = workout.ImageUrl,
-                   // Creator = workout.Creator,
+                    Creator = workout.Creator,
                     Category = workout.Category,
                     CreatorId = workout.CreatorId,
                     CategoryId = workout.CategoryId,
@@ -398,7 +398,7 @@ namespace GymProject.Core.Services
             }
         }
 
-        public async Task DeleteWorkout(int Id,string userId)
+        public async Task DeleteWorkout(int Id, string userId)
         {
             try
             {
@@ -445,6 +445,25 @@ namespace GymProject.Core.Services
             }
         }
 
+        public async Task<List<WorkoutCardDTO>> GetAllNotDeletedWorkoutsForUser(string userId)
+        {
+            var allWorkouts = await workoutRepository.GetAllNotDeleted();
+            var workouts = allWorkouts.Where(w => w.UsersWorkouts.Any(uw => uw.UserId == userId && uw.IsDeleted == false)).ToList().
+                Select(w => new WorkoutCardDTO
+                {
+                    Id = w.Id,
+                    Name = w.Name,
+                    UserWorkouts = w.UsersWorkouts,
+                    Category = w.Category,
+                    Creator = w.Creator,
+                    CategoryId = w.CategoryId,
+                    CreatorId = w.CreatorId,
+                    DifficultyLevel = w.DifficultyLevel,
+                    Duration = w.Duration,
+                    ImageUrl = w.ImageUrl
+                }).ToList();
+            return workouts;
+        }
         public List<WorkoutCardDTO> ApplySearchFilter(List<WorkoutCardDTO> workoutsDTOs, string searchString)
         {
             try
