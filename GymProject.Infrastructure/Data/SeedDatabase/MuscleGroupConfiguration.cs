@@ -11,21 +11,16 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
 {
     internal class MuscleGroupConfiguration : IEntityTypeConfiguration<MuscleGroup>
     {
+        private readonly SeedData _seedData;
+
+        public MuscleGroupConfiguration(SeedData seedData)
+        {
+            _seedData = seedData;
+        }
+
         public void Configure(EntityTypeBuilder<MuscleGroup> builder)
         {
-            var data = new SeedData();
-            builder.HasData(new MuscleGroup[]
-            {
-                data.FirstMuscleGroup,
-                data.SecondMuscleGroup,
-                data.ThirdMuscleGroup,
-                data.FourthMuscleGroup,
-                data.FifthMuscleGroup,
-                data.SixthMuscleGroup,
-                data.SeventhMuscleGroup,
-                data.EightMuscleGroup
-            }
-            );
+            builder.HasData(_seedData.MuscleGroups);
         }
     }
 }

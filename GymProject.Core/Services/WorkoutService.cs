@@ -84,7 +84,7 @@ namespace GymProject.Core.Services
                     Description = workout.Description,
                     DifficultyLevel = workout.DifficultyLevel,
                     ImageUrl = workout.ImageUrl,
-                    Creator = workout.Creator,
+                   // Creator = workout.Creator,
                     Category = workout.Category,
                     CreatorId = workout.CreatorId,
                     CategoryId = workout.CategoryId,

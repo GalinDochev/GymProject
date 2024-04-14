@@ -20,7 +20,7 @@ namespace GymProject.Core.DTOs.WorkoutDTOs
         public int Duration { get; set; }
         public int DifficultyLevel { get; set; }
         public string CreatorId { get; set; } = string.Empty;
-        public IdentityUser Creator { get; set; } = null!;
+        public ApplicationUser Creator { get; set; } = null!;
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
 

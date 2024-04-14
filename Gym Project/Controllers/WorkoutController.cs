@@ -65,10 +65,10 @@ namespace Gym_Project.Controllers
                         ImageUrl = e.ImageUrl,
                         Category = e.Category.Name,
                         Duration = e.Duration,
-                        CreatorId = e.Creator.Id,
+                        CreatorId = e.CreatorId,
                         CreatorName = e.Creator.UserName,
                         IsJoined = e.UserWorkouts.Any(uw => uw.UserId == userId &&
-                                                         uw.UserId != e.Creator.Id &&
+                                                         uw.UserId != e.CreatorId &&
                                                          !uw.IsDeleted)
                     }).ToList();
                 ViewBag.SearchString = searchString ?? string.Empty;

@@ -25,7 +25,7 @@ namespace GymProject.Infrastructure.Data.Models
         public string UserId { get; set; } = string.Empty;
 
         [Required]
-        public IdentityUser User { get; set; } = null!;
+        public ApplicationUser User { get; set; } = null!;
 
         private bool _isDeleted;
         public bool IsDeleted { get => _isDeleted; set => _isDeleted = value; }

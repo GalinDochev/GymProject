@@ -40,7 +40,7 @@ namespace GymProject.Infrastructure.Data.Models
         [ForeignKey(nameof(CreatorId))]
         public string CreatorId { get; set; } = string.Empty;
         [Required]
-        public IdentityUser Creator { get; set; } = null!;
+        public ApplicationUser Creator { get; set; } = null!;
 
         [Required]
         [Comment("Workout Category")]

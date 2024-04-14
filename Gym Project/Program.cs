@@ -82,12 +82,13 @@ using (var scope = app.Services.CreateScope())
 
 using (var scope = app.Services.CreateScope())
 {
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     string email = "galindochev953@gmail.com";
     var password = "galindochev953Pass";
-    if (await userManager.FindByEmailAsync(email) == null)
+    var existingUser = await userManager.FindByEmailAsync(email);
+    if (existingUser == null || !string.Equals(existingUser.Email, email, StringComparison.OrdinalIgnoreCase))
     {
-        var user = new IdentityUser();
+        var user = new ApplicationUser();
         user.UserName = email;
         user.Email = email;
         await userManager.CreateAsync(user, password);

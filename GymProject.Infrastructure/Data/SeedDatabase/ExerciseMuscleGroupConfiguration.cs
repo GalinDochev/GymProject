@@ -12,6 +12,11 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
 {
     internal class ExerciseMuscleGroupConfiguration : IEntityTypeConfiguration<ExerciseMuscleGroup>
     {
+        private readonly SeedData _seedData;
+        public ExerciseMuscleGroupConfiguration(SeedData seedData)
+        {
+            _seedData = seedData;
+        }
         public void Configure(EntityTypeBuilder<ExerciseMuscleGroup> builder)
         {
             builder.HasKey(emg => new { emg.ExerciseId, emg.MuscleGroupId });
@@ -21,10 +26,7 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
             builder.HasOne(emg => emg.MuscleGroup).WithMany(mg => mg.ExerciseMuscleGroups).HasForeignKey(emg => emg.MuscleGroupId);
 
 
-            var data = new SeedData();
-            builder.HasData(new ExerciseMuscleGroup[] { data.FirstExerciseMuscleGroup, data.SecondExerciseMuscleGroup, data.ThirdExerciseMuscleGroup, data.FourthExerciseMuscleGroup }
-            );
-
+            builder.HasData(_seedData.ExerciseMuscleGroups);
         }
     }
 }

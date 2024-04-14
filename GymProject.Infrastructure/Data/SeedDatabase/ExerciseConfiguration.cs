@@ -12,11 +12,16 @@ namespace GymProject.Infrastructure.Data.SeedDatabase
 {
     internal class ExerciseConfiguration : IEntityTypeConfiguration<Exercise>
     {
+        private readonly SeedData _seedData;
+
+        public ExerciseConfiguration(SeedData seedData)
+        {
+            _seedData = seedData;
+        }
+
         public void Configure(EntityTypeBuilder<Exercise> builder)
         {
-            var data = new SeedData();
-            builder.HasData(new Exercise[] {data.FirstExercise,data.SecondExercise,data.ThirdExercise,data.FourthExercise }
-            );
+            builder.HasData(_seedData.Exercises);
         }
     }
 }

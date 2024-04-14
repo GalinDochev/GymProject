@@ -24,11 +24,12 @@ namespace GymProject.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new ExerciseConfiguration());
-            modelBuilder.ApplyConfiguration(new ExerciseMuscleGroupConfiguration());
-            modelBuilder.ApplyConfiguration(new MuscleGroupConfiguration());
-            modelBuilder.ApplyConfiguration(new TrainerConfiguration());
+            var seedData = new SeedData();
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration(seedData));
+            modelBuilder.ApplyConfiguration(new ExerciseConfiguration(seedData));
+            modelBuilder.ApplyConfiguration(new ExerciseMuscleGroupConfiguration(seedData));
+            modelBuilder.ApplyConfiguration(new MuscleGroupConfiguration(seedData));
+            modelBuilder.ApplyConfiguration(new TrainerConfiguration(seedData));
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<ExerciseWorkout>()
