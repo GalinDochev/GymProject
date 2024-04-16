@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net.Mail;
 using System.Net;
+using GymProject.Common.Constants;
 
 namespace Gym_Project.Controllers
 {
@@ -36,25 +37,34 @@ namespace Gym_Project.Controllers
         [HttpPost]
         public IActionResult ContactUs(EmailViewModel model)
         {
-            using (var smtpClient = new SmtpClient())
+            try
             {
-                smtpClient.Host = "smtp.gmail.com";
-                smtpClient.Port = 587;
-                smtpClient.EnableSsl = true;
-                var emailFrom = model.From;
-                var username = _configuration["GmailCredentials:Username"];
-                var password = _configuration["GmailCredentials:Password"];
-                MailMessage mm = new MailMessage(username, model.EmailAddress);
-                mm.Subject = model.Subject;
-                mm.Body = $"{model.Message}{Environment.NewLine}{Environment.NewLine}Message is from: {emailFrom}";
-                mm.IsBodyHtml = false;
-                smtpClient.Credentials = new NetworkCredential(username, password);
+                using (var smtpClient = new SmtpClient())
+                {
+                    smtpClient.Host = "smtp.gmail.com";
+                    smtpClient.Port = 587;
+                    smtpClient.EnableSsl = true;
+                    var emailFrom = model.From;
+                    var username = _configuration["GmailCredentials:Username"];
+                    var password = _configuration["GmailCredentials:Password"];
+                    MailMessage mm = new MailMessage(username, model.EmailAddress);
+                    mm.Subject = model.Subject;
+                    mm.Body = $"{model.Message}{Environment.NewLine}{Environment.NewLine}Message is from: {emailFrom}";
+                    mm.IsBodyHtml = false;
+                    smtpClient.Credentials = new NetworkCredential(username, password);
 
-                smtpClient.Send(mm);
-                ViewBag.Message = "Message sent";
+                    smtpClient.Send(mm);
+                    ViewBag.Message = "Message sent";
+                    return RedirectToAction(nameof(Index));
+                }
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in ContactUs/HomeController");
+                TempData["ShowException"] = true;
+                TempData["ExceptionMessage"] = $"{CustomExceptionMessages.FailedEmailSend}"; ;
+                return RedirectToAction(nameof(ContactUs));
+            }
         }
         [HttpGet]
         public IActionResult Contacts()

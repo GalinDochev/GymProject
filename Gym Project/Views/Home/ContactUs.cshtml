@@ -65,7 +65,7 @@
     }
 
     .contact-info p {
-        color: #343a40; 
+        color: #343a40;
         font-size: 16px;
     }
 </style>
@@ -111,3 +111,15 @@
         <p class="mb-4">Email: info@example.com</p>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var showException = '@(TempData["ShowException"] ?? "")';
+            var errorMessage = '@(TempData["ExceptionMessage"] ?? "")';
+            if (showException === "True" && errorMessage) {
+                alert(errorMessage);
+            }
+        });
+    </script>
+}

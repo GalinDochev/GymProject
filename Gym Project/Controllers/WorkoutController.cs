@@ -229,7 +229,7 @@ namespace Gym_Project.Controllers
             {
                 var workoutDTO = await _workoutService.GetWorkoutByIdForEdit(Id);
                 var userId = GetUserId();
-                if (userId != workoutDTO.CreatorId)
+                if (userId != workoutDTO.CreatorId && !User.IsInRole("Admin"))
                 {
                     throw new UnAuthorizedActionException("You can't edit a workout that you haven't created");
                 }
@@ -287,6 +287,11 @@ namespace Gym_Project.Controllers
             try
             {
                 var userId = GetUserId();
+                bool isAdmin = false;
+                if (User.IsInRole("Admin"))
+                {
+                    isAdmin = true;
+                }
                 var exercises = await _exerciseService.GetExercisesByName(workoutViewModel.SelectedExercises);
                 var category = await _workoutService.GetCategoryByName(workoutViewModel.Category);
                 var workoutDTO = new AddWorkoutDTO
@@ -301,7 +306,7 @@ namespace Gym_Project.Controllers
                     CreatorId = userId,
                     Category = category
                 };
-                await _workoutService.EditWorkout(workoutDTO);
+                await _workoutService.EditWorkout(workoutDTO,isAdmin);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -320,8 +325,13 @@ namespace Gym_Project.Controllers
             try
             {
                 var userId = GetUserId();
+                bool isAdmin = false;
+                if (User.IsInRole("Admin"))
+                {
+                    isAdmin = true;
+                }
                 var workout = await _workoutService.GetWorkoutByIdForEdit(Id);
-                await _workoutService.DeleteWorkout(Id, userId);
+                await _workoutService.DeleteWorkout(Id, userId, isAdmin);
                 return RedirectToAction(nameof(Index));
             }
             catch (UnAuthorizedActionException ex)

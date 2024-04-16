@@ -27,5 +27,9 @@ namespace GymProject.Common.Constants
         public const string DeleteWorkoutErrorMessage = "An Error Occured while Deliting a Workout!";
         public const string UnauthorisedDeleteWorkoutErrorMessage = "You cant delete a workout that you havent created!";
         public const string UnauthorisedEditWorkoutErrorMessage = "You cant  edit a workout you havent created";
+
+        public const string FailedEmailSend= "An Error Occured while Sending the Email!";
+
+
     }
 }

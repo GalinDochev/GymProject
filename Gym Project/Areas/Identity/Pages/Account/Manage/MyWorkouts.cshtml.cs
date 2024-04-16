@@ -14,11 +14,13 @@ namespace Gym_Project.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly WorkoutService _workoutService;
+        private readonly ILogger<MyWorkouts> _logger;
 
-        public MyWorkouts(UserManager<ApplicationUser> userManager, WorkoutService workoutService)
+        public MyWorkouts(UserManager<ApplicationUser> userManager, WorkoutService workoutService, ILogger<MyWorkouts> logger)
         {
             _userManager = userManager;
             _workoutService = workoutService;
+            _logger = logger;
         }
         public int TotalPages { get; set; }
         public int PageNumber { get; set; }
@@ -29,47 +31,55 @@ namespace Gym_Project.Areas.Identity.Pages.Account.Manage
             int pageNumber = PaginationConstants.PageNumber,
             int pageSize = PaginationConstants.PageSize)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            try
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-
-
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var workoutsDTOs = await _workoutService.GetAllNotDeletedWorkoutsForUser(userId);
-            workoutsDTOs = _workoutService.ApplySearchFilter(workoutsDTOs, searchString);
-            workoutsDTOs = _workoutService.ApplyCategoryFilter(workoutsDTOs, category);
-            workoutsDTOs = _workoutService.ApplyDifficultyLevelFilter(workoutsDTOs, difficultyLevelGroup);
-
-            var categoryNames = await _workoutService.GetCategoriesNames();
-            ViewData["Categories"] = categoryNames;
-
-            var totalRecords = workoutsDTOs.Count;
-            TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
-            PageNumber = pageNumber;
-
-              Workouts = workoutsDTOs
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select(e => new AllWorkoutsViewModel
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
                 {
-                    Id = e.Id,
-                    Name = e.Name,
-                    DifficultyLevel = e.DifficultyLevel,
-                    ImageUrl = e.ImageUrl,
-                    Category = e.Category.Name,
-                    Duration = e.Duration,
-                    CreatorId = e.CreatorId,
-                    CreatorName = e.Creator.UserName,
-                    IsJoined = e.UserWorkouts.Any(uw => uw.UserId == userId &&
-                                                       uw.UserId != e.CreatorId &&
-                                                       !uw.IsDeleted)
-                }).ToList();
+                    return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                }
 
-            ViewData["SearchString"] = searchString ?? string.Empty;
-            return Page();
+
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var workoutsDTOs = await _workoutService.GetAllNotDeletedWorkoutsForUser(userId);
+                workoutsDTOs = _workoutService.ApplySearchFilter(workoutsDTOs, searchString);
+                workoutsDTOs = _workoutService.ApplyCategoryFilter(workoutsDTOs, category);
+                workoutsDTOs = _workoutService.ApplyDifficultyLevelFilter(workoutsDTOs, difficultyLevelGroup);
+
+                var categoryNames = await _workoutService.GetCategoriesNames();
+                ViewData["Categories"] = categoryNames;
+
+                var totalRecords = workoutsDTOs.Count;
+                TotalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+                PageNumber = pageNumber;
+
+                Workouts = workoutsDTOs
+                  .Skip((pageNumber - 1) * pageSize)
+                  .Take(pageSize)
+                  .Select(e => new AllWorkoutsViewModel
+                  {
+                      Id = e.Id,
+                      Name = e.Name,
+                      DifficultyLevel = e.DifficultyLevel,
+                      ImageUrl = e.ImageUrl,
+                      Category = e.Category.Name,
+                      Duration = e.Duration,
+                      CreatorId = e.CreatorId,
+                      CreatorName = e.Creator.UserName,
+                      IsJoined = e.UserWorkouts.Any(uw => uw.UserId == userId &&
+                                                         uw.UserId != e.CreatorId &&
+                                                         !uw.IsDeleted)
+                  }).ToList();
+
+                ViewData["SearchString"] = searchString ?? string.Empty;
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "There has been an error in Index/WorkoutController ");
+                return StatusCode(500);
+            }
         }
     }
 }

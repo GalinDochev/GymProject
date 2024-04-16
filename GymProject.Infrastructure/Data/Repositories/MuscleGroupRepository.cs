@@ -19,7 +19,6 @@ namespace GymProject.Infrastructure.Data.Repositories
 
         public async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
         {
-            // Query the database to find MuscleGroup entities with names matching the provided list of names
             return await context.MuscleGroups
                 .Where(m => muscleGroupNames.Contains(m.Name))
                 .ToListAsync();

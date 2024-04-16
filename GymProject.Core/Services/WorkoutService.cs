@@ -315,12 +315,12 @@ namespace GymProject.Core.Services
             }
         }
 
-        public async Task EditWorkout(AddWorkoutDTO workoutDTO)
+        public async Task EditWorkout(AddWorkoutDTO workoutDTO, bool isAdmin)
         {
             try
             {
                 var workoutToEdit = await workoutRepository.GetById(workoutDTO.Id);
-                if (workoutToEdit.CreatorId != workoutDTO.CreatorId)
+                if (workoutToEdit.CreatorId != workoutDTO.CreatorId && isAdmin==false)
                 {
                     throw new Exception("You cannot edit a workout that you havent created");
                 }
@@ -398,12 +398,12 @@ namespace GymProject.Core.Services
             }
         }
 
-        public async Task DeleteWorkout(int Id, string userId)
+        public async Task DeleteWorkout(int Id, string userId,bool isAdmin)
         {
             try
             {
                 var workoutToDelete = await workoutRepository.GetById(Id);
-                if (workoutToDelete.CreatorId != userId)
+                if (workoutToDelete.CreatorId != userId && isAdmin == false)
                 {
                     throw new UnAuthorizedActionException("You cant Delete a workout that you havent created");
                 }
@@ -447,22 +447,35 @@ namespace GymProject.Core.Services
 
         public async Task<List<WorkoutCardDTO>> GetAllNotDeletedWorkoutsForUser(string userId)
         {
-            var allWorkouts = await workoutRepository.GetAllNotDeleted();
-            var workouts = allWorkouts.Where(w => w.UsersWorkouts.Any(uw => uw.UserId == userId && uw.IsDeleted == false)).ToList().
-                Select(w => new WorkoutCardDTO
-                {
-                    Id = w.Id,
-                    Name = w.Name,
-                    UserWorkouts = w.UsersWorkouts,
-                    Category = w.Category,
-                    Creator = w.Creator,
-                    CategoryId = w.CategoryId,
-                    CreatorId = w.CreatorId,
-                    DifficultyLevel = w.DifficultyLevel,
-                    Duration = w.Duration,
-                    ImageUrl = w.ImageUrl
-                }).ToList();
-            return workouts;
+            try
+            {
+                var allWorkouts = await workoutRepository.GetAllNotDeletedWorkoutsForUser(userId);
+                var workoutCards = allWorkouts.
+                     Select(w => new WorkoutCardDTO
+                     {
+                         Id = w.Id,
+                         Name = w.Name,
+                         UserWorkouts = w.UsersWorkouts,
+                         Category = w.Category,
+                         Creator = w.Creator,
+                         CategoryId = w.CategoryId,
+                         CreatorId = w.CreatorId,
+                         DifficultyLevel = w.DifficultyLevel,
+                         Duration = w.Duration,
+                         ImageUrl = w.ImageUrl
+                     }).ToList();
+                return workoutCards;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "Invalid operation exception occurred.");
+                throw; 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred.");
+                throw; 
+            }
         }
         public List<WorkoutCardDTO> ApplySearchFilter(List<WorkoutCardDTO> workoutsDTOs, string searchString)
         {

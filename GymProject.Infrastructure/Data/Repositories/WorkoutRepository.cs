@@ -78,5 +78,30 @@ namespace GymProject.Infrastructure.Data.Repositories
                 throw;
             }
         }
+
+        public async Task<List<Workout>> GetAllNotDeletedWorkoutsForUser(string userId)
+        {
+            try
+            {
+                var workouts = await context.Workouts
+                    .Include(w => w.Category)
+                    .Include(w => w.UsersWorkouts)
+                        .ThenInclude(uw => uw.User)
+                    .Where(w => w.UsersWorkouts.Any(uw => uw.UserId == userId && uw.IsDeleted == false))
+                    .ToListAsync();
+
+                return workouts;
+            }
+            catch (InvalidOperationException ex)
+            {
+                _logger.LogError(ex, "An Invalid Operation Exception occured in the GetAllNotDeletedWorkoutsForUser in the WorkoutRepository");
+                throw; 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occured in the GetAllNotDeletedWorkoutsForUser in the WorkoutRepository");
+                throw; 
+            }
+        }
     }
 }
