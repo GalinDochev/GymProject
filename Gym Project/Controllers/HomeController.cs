@@ -66,11 +66,6 @@ namespace Gym_Project.Controllers
                 return RedirectToAction(nameof(ContactUs));
             }
         }
-        [HttpGet]
-        public IActionResult Contacts()
-        {
-            return View();
-        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
