@@ -35,7 +35,7 @@ namespace Gym_Project.Controllers
         }
 
         [HttpPost]
-        public IActionResult ContactUs(EmailViewModel model)
+        public IActionResult SendEmail(EmailViewModel model)
         {
             try
             {

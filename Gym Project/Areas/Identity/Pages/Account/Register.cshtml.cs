@@ -102,7 +102,7 @@ namespace Gym_Project.Areas.Identity.Pages.Account
 
             [Required]
             [Display(Name = "Age")]
-            [Range(ApplicationUserDataConstants.MinAge,ApplicationUserDataConstants.MaxAge, ErrorMessage = "The {0} must be between {2} and{1}.")]
+            [Range(ApplicationUserDataConstants.MinAge,ApplicationUserDataConstants.MaxAge, ErrorMessage = "The {0} must be between {1} and{2 }.")]
             public int Age { get; set; }
 
 

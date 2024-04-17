@@ -66,11 +66,11 @@
                                 }
                                 else if (User?.Identity?.IsAuthenticated == true && workout.IsJoined)
                                 {
-                                    <a asp-controller="Workout" asp-action="LeaveWorkout" asp-route-id="@workout.Id" class="btn btn-danger btn-block fw-bold mt-0">Leave Workout</a>
+                                    <a asp-controller="Workout" asp-action="LeaveWorkout" asp-route-id="@workout.Id" class="btn btn-danger btn-block fw-bold mt-2">Leave Workout</a>
                                 }
                                 else if (User?.Identity?.IsAuthenticated == true)
                                 {
-                                    <a asp-controller="Workout" asp-action="JoinWorkout" asp-route-id="@workout.Id" class="btn btn-warning btn-block fw-bold mt-0">Join Workout</a>
+                                    <a asp-controller="Workout" asp-action="JoinWorkout" asp-route-id="@workout.Id" class="btn btn-warning btn-block fw-bold mt-2">Join Workout</a>
                                 }
                             </div>
                             <div class="mt-auto mt-0">
