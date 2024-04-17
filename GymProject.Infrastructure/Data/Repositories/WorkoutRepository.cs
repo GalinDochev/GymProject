@@ -12,11 +12,9 @@ namespace GymProject.Infrastructure.Data.Repositories
     public class WorkoutRepository:Repository<Workout>
     {
         private readonly ApplicationDbContext context;
-        private readonly ILogger _logger;
-        public WorkoutRepository(ApplicationDbContext context,ILogger<WorkoutRepository> logger) : base(context)
+        public WorkoutRepository(ApplicationDbContext context) : base(context)
         {
             this.context = context;
-            _logger = logger;
         }
 
         public override async Task<IEnumerable<Workout>> GetAllNotDeleted()
@@ -38,13 +36,11 @@ namespace GymProject.Infrastructure.Data.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogError(ex, "An error occurred due to an invalid operation.");
 
                 throw new Exception("Invalid operation error occurred.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unexpected error occurred.");
 
                 throw;
             }
@@ -73,7 +69,6 @@ namespace GymProject.Infrastructure.Data.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogError(ex, $"Workout with id {id} is not found in the Database.");
 
                 throw;
             }
@@ -94,12 +89,10 @@ namespace GymProject.Infrastructure.Data.Repositories
             }
             catch (InvalidOperationException ex)
             {
-                _logger.LogError(ex, "An Invalid Operation Exception occured in the GetAllNotDeletedWorkoutsForUser in the WorkoutRepository");
                 throw; 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occured in the GetAllNotDeletedWorkoutsForUser in the WorkoutRepository");
                 throw; 
             }
         }

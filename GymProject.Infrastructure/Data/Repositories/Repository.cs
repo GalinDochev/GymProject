@@ -29,13 +29,13 @@ namespace GymProject.Infrastructure.Data.Repositories
             return entity;
         }
 
-        public async Task Add(TEntity entity)
+        public virtual async Task Add(TEntity entity)
         {
              await _context.Set<TEntity>().AddAsync(entity);
              await _context.SaveChangesAsync();
         }
 
-        public async Task Update(TEntity entity)
+        public virtual async Task Update(TEntity entity)
         {
            
             _context.Set<TEntity>().Attach(entity);
@@ -43,7 +43,7 @@ namespace GymProject.Infrastructure.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(TEntity entity)
+        public virtual async Task Delete(TEntity entity)
         {
             if (entity is IDeletable deletableEntity)
             {

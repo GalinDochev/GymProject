@@ -148,9 +148,8 @@ namespace GymProject.Core.Services
         {
             try
             {
-                var muscleGroups = await muscleGroupRepository.GetAllNotDeleted();
-                var muscleGroupsNames = muscleGroups.Select(m => m.Name).ToList();
-                return muscleGroupsNames;
+                var muscleGroups = await muscleGroupRepository.GetMuscleGroupsNames();
+                return muscleGroups;
             }
             catch (SqlException ex)
             {
@@ -168,8 +167,7 @@ namespace GymProject.Core.Services
         {
             try
             {
-                var exercises = await exerciseRepository.GetAllNotDeleted();
-                var exercisesNames = exercises.Select(m => m.Name).ToList();
+                var exercisesNames = await exerciseRepository.GetExercisesNames();
                 return exercisesNames;
             }
             catch (SqlException ex)
@@ -330,17 +328,13 @@ namespace GymProject.Core.Services
                 exerciseToEdit.Sets = exerciseDTO.Sets;
                 exerciseToEdit.ImageUrl = exerciseDTO.ImageUrl;
 
-                // Extract the IDs of existing muscle groups associated with the exercise
                 var existingMuscleGroups = exerciseToEdit.ExerciseMuscleGroups.ToList();
 
-                // Iterate over the existing ExerciseMuscleGroups to identify and delete unused ones
                 foreach (var existingMuscleGroup in existingMuscleGroups)
                 {
-                    // Check if the existing association is with a selected muscle group
                     if (!exerciseDTO.SelectedMuslceGroups.Any(mg => mg.Id == existingMuscleGroup.MuscleGroupId))
                     {
-                        // If the existing association is not with a selected muscle group,
-                        // soft delete it if it's not already deleted
+
                         if (!existingMuscleGroup.IsDeleted)
                         {
                             await exerciseMuscleGroupRepository.Delete(existingMuscleGroup);
@@ -444,5 +438,6 @@ namespace GymProject.Core.Services
             }
 
         }
+
     }
 }

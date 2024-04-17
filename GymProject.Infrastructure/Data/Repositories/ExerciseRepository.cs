@@ -1,4 +1,5 @@
 ﻿using GymProject.Infrastructure.Data.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -44,11 +45,19 @@ namespace GymProject.Infrastructure.Data.Repositories
             return exercise;
         }
 
-        public async Task<List<Exercise>> GetExercisesByName(List<string> exerciseNames)
+        public virtual async Task<List<Exercise>> GetExercisesByName(List<string> exerciseNames)
         {
             return await context.Excercises
                 .Where(m => exerciseNames.Contains(m.Name))
                 .ToListAsync();
+        }
+
+        public virtual async Task<List<string>> GetExercisesNames()
+        {
+           
+                var exercisesNames = await context.Excercises.Select(ex => ex.Name).ToListAsync();
+                return exercisesNames;
+           
         }
     }
 }

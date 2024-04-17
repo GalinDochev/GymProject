@@ -101,7 +101,7 @@ namespace GymProject.Core.Services
             }
         }
 
-        public async Task JoinWorkout(int Id, string userId)
+        public virtual async Task JoinWorkout(int Id, string userId)
         {
             var workout = await workoutRepository.GetById(Id);
             var userWorkout = await userWorkoutRepository.GetByUserIdAndWorkoutId(userId, workout.Id);
@@ -123,6 +123,7 @@ namespace GymProject.Core.Services
                 workout.UsersWorkouts.Add(newUserWorkout);
                 await userWorkoutRepository.Add(newUserWorkout);
             }
+
         }
 
         public async Task RemoveWorkoutFromCollectionAsync(int Id, string userId)
@@ -135,8 +136,8 @@ namespace GymProject.Core.Services
             var userWorkout = await userWorkoutRepository.GetByUserIdAndWorkoutId(userId, workout.Id);
             if (userWorkout != null && userWorkout.IsDeleted == false)
             {
-                await userWorkoutRepository.Delete(userWorkout);
                 workout.UsersWorkouts.Remove(userWorkout);
+                await userWorkoutRepository.Delete(userWorkout);
             }
             else
             {
@@ -331,7 +332,7 @@ namespace GymProject.Core.Services
                 workoutToEdit.ImageUrl = workoutDTO.ImageUrl;
                 workoutToEdit.Duration = workoutDTO.Duration;
                 workoutToEdit.Category = workoutDTO.Category;
-                workoutToEdit.CategoryId = workoutDTO.Category.Id;
+                workoutToEdit.CategoryId = workoutDTO.CategoryId;
                 var existingExercises = workoutToEdit.ExerciseWorkouts.ToList();
 
                 foreach (var existingExercise in existingExercises)

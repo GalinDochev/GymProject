@@ -1,4 +1,5 @@
 ﻿using GymProject.Infrastructure.Data.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,19 @@ namespace GymProject.Infrastructure.Data.Repositories
             this.context = context;
         }
 
-        public async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
+        public virtual async Task<List<MuscleGroup>> GetMuscleGroupsByName(List<string> muscleGroupNames)
         {
             return await context.MuscleGroups
                 .Where(m => muscleGroupNames.Contains(m.Name))
                 .ToListAsync();
+        }
+
+        public virtual async Task<List<string>> GetMuscleGroupsNames()
+        {
+          
+                var muscleGroupsNames = await context.MuscleGroups.Select(mg=>mg.Name).ToListAsync();
+                return muscleGroupsNames;
+          
         }
     }
 }

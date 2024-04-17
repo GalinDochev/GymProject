@@ -16,7 +16,7 @@ namespace GymProject.Infrastructure.Data.Repositories
             this.context = context;
         }
 
-        public async Task <Category> GetCategoryByName(string categoryName)
+        public virtual async Task <Category> GetCategoryByName(string categoryName)
         {
             return await context.WorkoutCategories
                 .Where(m => categoryName.Contains(m.Name))
