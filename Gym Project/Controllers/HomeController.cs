@@ -18,7 +18,7 @@ namespace Gym_Project.Controllers
             _logger = logger;
             _configuration = configuration;
         }
-
+    
         public IActionResult Index()
         {
             return View();
