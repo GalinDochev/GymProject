@@ -49,6 +49,9 @@ namespace GymProject.Infrastructure.Data.Models
         [Required]
         public Category Category { get; set; } = null!;
 
+        [Required]
+        public DateTime WorkoutStartTime { get; set; }
+
         public ICollection<ExerciseWorkout> ExerciseWorkouts { get; set; } = new List<ExerciseWorkout>();
         public ICollection<UserWorkout> UsersWorkouts { get; set; } = new List<UserWorkout>();
 
